@@ -1,0 +1,47 @@
+#ifndef LEXICO_H_INCLUDED
+#define LEXICO_H_INCLUDED
+
+#include<string>
+#include<unordered_map>
+using namespace std;
+
+enum Contantes {NUM_INT = 256, num_float,id, ok, notok };
+
+
+
+
+/*
+struct ID:public Token{
+    string nome;
+    ID():Token(0);
+    ID()::ID( int tok, string nome){
+        this->tag = tok;
+        this->nome = nome;
+    }
+};*/
+
+struct Num_int : public Token{
+    int valor ;
+    Num_int(int v){
+        this->valor = Token(tag::NUM_INT);
+    }
+};
+
+class Lexico{
+protected:
+        int peek = ' ';
+        int linha = 1;
+        unordered_map<string, id> id_tabela;
+
+public:
+    Lexico();
+
+    Token Escanear();
+    void Iniciar();
+
+
+};
+
+
+
+#endif // LEXICO_H_INCLUDED
