@@ -1,0 +1,4 @@
+fn main  vaccum <    
+  --codigos aqui dentro da main--  
+  
+    take 0; > 
