@@ -3,13 +3,13 @@ import os
 
 class AnalisadorLexico:
 
-    def __init__(self, arq_font):
+    def __init__(self, cam:str):
         self.__cab_leitura = 0
         self.__linha = 1 
         self.__percorrer = []
         self.__lexema = ''
         self.__tabela_simbolos = []
-        self.__arq_font = arq_font
+        self.__arq_font = cam
         self.__estado = 0
         self.__fim_linha = '\n'
         self.__fim_arquivo = '\0'
@@ -23,13 +23,17 @@ class AnalisadorLexico:
         self.__palavras_reservadas = ['main','num_int', 'num_flu', 'text', 'case', 'ordo', 'to', 'when', 'tetin', 'texout', 'puts', 'take', 'fn', 'vacuum', 'bool']
 
 
-        if not os.path.isfile(arq_font):
-            print('Arquivo não encontrado!')
-            exit(1)
-        else:
-            with open(arq_font) as file:
-                self.__arq_font = file.read()
-    
+        # if not os.path.isfile(arq_font):
+        #     print('Arquivo não encontrado!')
+        #     exit(1)
+        # else:
+        #     with open(arq_font) as file:
+        #         self.__arq_font = file.read()
+
+        arquivo = open(cam, 'r')
+        self._conteudo = arquivo.read()
+        
+        arquivo.close()
     
 
     def __adicionar_token(self, tipo, lexema):
