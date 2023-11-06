@@ -5,6 +5,7 @@ class AnalisadorSintatico:
         self.analisador_lexico = analisador_lexico
         self.index_token = 0
         self.erro = False
+        self.token_atual = None
 
     def proximo_token(self):
         tabela_simbolos = self.analisador_lexico.get_tabela_simbolos()
@@ -19,19 +20,19 @@ class AnalisadorSintatico:
             self.proximo_token()
         else:
             self.erro = True
-            print(f"Erro de sintaxe na linha {self.token_atual['linha']} - Esperado {tipo_esperado}, encontrado {self.token_atual['tipo']}")
+            print(f"Erro de sintaxe na linha {self.token_atual['linha']} - Esperado '{tipo_esperado}', encontrado '{self.token_atual['lexema']}'")
 
     def main(self):
+        print("Iniciando análise sintática...")
         self.proximo_token()
         self.programa()
 
         if self.token_atual is not None:
             self.erro = True
-            print(f"Erro de sintaxe na linha {self.token_atual['linha']} - Símbolo não esperado {self.token_atual['lexema']}")
+            print(f"Erro de sintaxe na linha {self.token_atual['linha']} - Símbolo não esperado '{self.token_atual['lexema']}'")
 
         if not self.erro:
             print("Análise sintática concluída com sucesso.")
-
 
     def programa(self):
         if self.token_atual and self.token_atual['tipo'] == 'Palavra Reservada' and self.token_atual['lexema'] == 'main':
@@ -40,6 +41,9 @@ class AnalisadorSintatico:
             self.lista_declaracao()
             self.casar('Operador')
             self.escopo()
+            if self.token_atual is not None:
+                self.erro = True
+                print(f"Erro de sintaxe na linha {self.token_atual['linha']} - Símbolo não esperado {self.token_atual['lexema']}")
         else:
             self.erro = True
             if self.token_atual:
@@ -49,11 +53,9 @@ class AnalisadorSintatico:
 
 
     def lista_declaracao(self):
-        if self.token_atual['tipo'] == 'Palavra Reservada' and self.token_atual['lexema'] in ['num_int', 'num_flu', 'text']:
+        if self.token_atual['tipo'] == 'Palavra Reservada' and self.token_atual['lexema'] in ['text', 'num_int', 'num_flu']:
             self.declaracao()
             self.lista_declaracao()
-        elif self.token_atual['tipo'] == 'Palavra Reservada' and self.token_atual['lexema'] == 'vacuum':
-            self.casar('Palavra Reservada')
         else:
             pass  # ε (vazio)
 
@@ -71,19 +73,25 @@ class AnalisadorSintatico:
         self.casar('Identificador')
 
     def escopo(self):
-        if self.token_atual['tipo'] == 'Operador' and self.token_atual['lexema'] == '{':
+        if self.token_atual['tipo'] == 'Operador' and self.token_atual['lexema'] == '--->':
             self.casar('Operador')
             self.escopo()
-            self.casar('Operador')
         else:
             self.comando()
             self.escopo()
 
+    def sim_relacional(self):
+        if self.token_atual['tipo'] == 'Operador Relacional':
+            self.casar('Operador Relacional')
+        else:
+            self.erro = True
+            print(f"Erro de sintaxe na linha {self.token_atual['linha']} - Operador Relacional esperado")
+
     def comando(self):
         if self.token_atual['tipo'] == 'Palavra Reservada':
-            if self.token_atual['lexema'] == 'tetin':
+            if self.token_atual['lexema'] == 'textin':
                 self.entrada()
-            elif self.token_atual['lexema'] == 'texout':
+            elif self.token_atual['lexema'] == 'textout':
                 self.saida()
             elif self.token_atual['lexema'] == 'case':
                 self.desvio()
