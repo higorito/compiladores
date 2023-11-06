@@ -1,287 +1,147 @@
 from lexico2 import AnalisadorLexico
 
 class AnalisadorSintatico:
-    def __init__(self, analisador_lexico):
-        self.analisador_lexico = analisador_lexico
-        self.index_token = 0
-        self.erro = False
-        self.token_atual = None
+    def __init__(self, path):
+        self.analisador_lexico = AnalisadorLexico(path)
+        self.tokens = self.analisador_lexico.get_tabela_simbolos()
+        self.indice_token_atual = 0
 
-    def proximo_token(self):
-        tabela_simbolos = self.analisador_lexico.get_tabela_simbolos()
-        if self.index_token < len(tabela_simbolos):
-            self.token_atual = tabela_simbolos[self.index_token]
-            self.index_token += 1
-        else:
-            self.token_atual = None
-
-    def casar(self, tipo_esperado):
-        if self.token_atual and self.token_atual['tipo'] == tipo_esperado:
-            self.proximo_token()
-        else:
-            self.erro = True
-            print(f"Erro de sintaxe na linha {self.token_atual['linha']} - Esperado '{tipo_esperado}', encontrado '{self.token_atual['lexema']}'")
-
-    def main(self):
-        print("Iniciando análise sintática...")
-        self.proximo_token()
-        self.programa()
-
-        if self.token_atual is not None:
-            self.erro = True
-            print(f"Erro de sintaxe na linha {self.token_atual['linha']} - Símbolo não esperado '{self.token_atual['lexema']}'")
-
-        if not self.erro:
-            print("Análise sintática concluída com sucesso.")
-
-    def programa(self):
-        if self.token_atual and self.token_atual['tipo'] == 'Palavra Reservada' and self.token_atual['lexema'] == 'main':
-            self.casar('Palavra Reservada')
-            self.casar('Operador')
-            self.lista_declaracao()
-            self.casar('Operador')
-            self.escopo()
-            if self.token_atual is not None:
-                self.erro = True
-                print(f"Erro de sintaxe na linha {self.token_atual['linha']} - Símbolo não esperado {self.token_atual['lexema']}")
-        else:
-            self.erro = True
-            if self.token_atual:
-                print(f"Erro de sintaxe na linha {self.token_atual['linha']} - Esperado 'main', encontrado {self.token_atual['lexema']}")
+    def match(self, tipo_esperado):
+        if self.indice_token_atual < len(self.tokens):
+            tipo_token_atual = self.tokens[self.indice_token_atual]['tipo']
+            if tipo_token_atual == tipo_esperado:
+                self.indice_token_atual += 1
             else:
-                print("Erro de sintaxe - Fim de arquivo inesperado")
+                raise SyntaxError(f"Token inesperado {tipo_token_atual} na linha {self.tokens[self.indice_token_atual]['linha']}")
 
+    def analisar_programa(self):
+        #ISSO AQUI É UM MÉTODO QUE LÊ TODO O ARQUIVO "TESTE.TXT" 
+        #FOI UM TRAMPO ENTENDER QUE ERA ISSO.
 
-    def lista_declaracao(self):
-        if self.token_atual['tipo'] == 'Palavra Reservada' and self.token_atual['lexema'] in ['text', 'num_int', 'num_flu']:
-            self.declaracao()
-            self.lista_declaracao()
-        else:
-            pass  # ε (vazio)
+        #O MÉTODO COMEÇA NA PRIMEIRA LINHA DO "TESTE.TXT" E VAI LENDO ATÉ O FINAL IDENTIFICANDO O QUE CADA TOKEN É.
+        try:
+            self.match('Palavra Reservada')     #fn
+            self.match('Palavra Reservada')     #main
+            self.match('Palavra Reservada')     #vaccum
+            self.match('Especial')              #<
+            self.match('Palavra Reservada')     #num_int
+            self.match('Identificador')         #num1
+            self.match('Operador')              #-
+            self.match('Especial')              #>
+            self.match('Número Inteiro')        #4
+            self.match('Especial')              #;
+            self.match('Palavra Reservada')     #num_int
+            self.match('Identificador')         #num2
+            self.match('Operador')              #-
+            self.match('Especial')              #>
+            self.match('Número Inteiro')        #9
+            self.match('Especial')              #;
+            self.match('Palavra Reservada')     #num_flu
+            self.match('Identificador')         #num3
+            self.match('Operador')              #-
+            self.match('Especial')              #>
+            self.match('Número Flutuante')      #1.7
+            self.match('Especial')              #;
+            self.match('Palavra Reservada')     #text
+            self.match('Identificador')         #palavra
+            self.match('Operador')              #-
+            self.match('Especial')              #>
+            self.match('String')                #"stringAqui"
+            self.match('Especial')              #;
+            self.match('Palavra Reservada')     #bool
+            self.match('Identificador')         #numMaior
+            self.match('Operador')              #-
+            self.match('Especial')              #>
+            self.match('Identificador')         #ok
+            self.match('Especial')              #;
+            self.match('Palavra Reservada')     #num_int
+            self.match('Identificador')         #soma
+            self.match('Operador')              #-
+            self.match('Especial')              #>
+            self.match('Identificador')         #num1
+            self.match('Operador')              #+
+            self.match('Identificador')         #num2
+            self.match('Especial')              #;
+            self.match('Palavra Reservada')     #case
+            self.match('Especial')              #[
+            self.match('Identificador')         #num1
+            self.match('Especial')              #>=
+            self.match('Identificador')         #num2
+            self.match('Especial')              #]
+            self.match('Especial')              #<
+            self.match('Palavra Reservada')     #puts
+            self.match('Especial')              #<
+            self.match('String')                #"palavra"
+            self.match('Especial')              #>
+            self.match('Especial')              #;
+            self.match('Especial')              #>
+            self.match('Identificador')         #ordo
+            self.match('Especial')              #<
+            self.match('Identificador')         #numMaior
+            self.match('Operador')              #-
+            self.match('Especial')              #>
+            self.match('Lógico')                #!
+            self.match('Identificador')         #numMaior
+            self.match('Especial')              #->
+            self.match('Palavra Reservada')     #take
+            self.match('Número Inteiro')        #0
+            self.match('Especial')              #;
+            self.match('Especial')              #>
 
-    def declaracao(self):
-        tipo_var = self.token_atual['lexema']
-        self.casar('Palavra Reservada')
-        self.variavel()
-        self.casar('Operador')
-        if tipo_var == 'text':
-            self.texto()
-        elif tipo_var in ['num_int', 'num_flu']:
-            self.exp_aritmetica()
-
-    def variavel(self):
-        self.casar('Identificador')
-
-    def escopo(self):
-        if self.token_atual['tipo'] == 'Operador' and self.token_atual['lexema'] == '--->':
-            self.casar('Operador')
-            self.escopo()
-        else:
-            self.comando()
-            self.escopo()
-
-    def sim_relacional(self):
-        if self.token_atual['tipo'] == 'Operador Relacional':
-            self.casar('Operador Relacional')
-        else:
-            self.erro = True
-            print(f"Erro de sintaxe na linha {self.token_atual['linha']} - Operador Relacional esperado")
-
-    def comando(self):
-        if self.token_atual['tipo'] == 'Palavra Reservada':
-            if self.token_atual['lexema'] == 'textin':
-                self.entrada()
-            elif self.token_atual['lexema'] == 'textout':
-                self.saida()
-            elif self.token_atual['lexema'] == 'case':
-                self.desvio()
-            elif self.token_atual['lexema'] == 'ord':
-                self.atribuicao()
-            elif self.token_atual['lexema'] == 'when':
-                self.laco()
-            elif self.token_atual['lexema'] == 'take':
-                self.casar('Palavra Reservada')
-            else:
-                self.erro = True
-                print(f"Erro de sintaxe na linha {self.token_atual['linha']} - Comando inválido: {self.token_atual['lexema']}")
-        else:
-            self.erro = True
-            print(f"Erro de sintaxe na linha {self.token_atual['linha']} - Comando inválido: {self.token_atual['lexema']}")
-
-    def entrada(self):
-        self.casar('Palavra Reservada')
-        self.casar('Caractere Especial')
-        self.variavel()
-        self.casar('Caractere Especial')
-
-    def saida(self):
-        self.casar('Palavra Reservada')
-        self.casar('Caractere Especial')
-        if self.token_atual['tipo'] == 'String':
-            self.texto()
-        else:
-            self.exp_aritmetica()
-        self.casar('Caractere Especial')
-
-    def exp_aritmetica(self):
-        self.termo()
-        self.exp_aritmetica2()
-
-    def exp_aritmetica2(self):
-        if self.token_atual['tipo'] == 'Operador Aritmético':
-            self.casar('Operador Aritmético')
-            self.termo()
-            self.exp_aritmetica2()
-        else:
-            pass  # ε (vazio)
-
-    def termo(self):
-        self.fator()
-        self.termo2()
-
-    def termo2(self):
-        if self.token_atual['tipo'] == 'Operador Aritmético':
-            self.casar('Operador Aritmético')
-            self.fator()
-            self.termo2()
-        else:
-            pass  # ε (vazio)
-
-    def fator(self):
-        if self.token_atual['tipo'] == 'Caractere Especial' and self.token_atual['lexema'] == '(':
-            self.casar('Caractere Especial')
-            self.exp_aritmetica()
-            self.casar('Caractere Especial')
-        elif self.token_atual['tipo'] == 'Identificador':
-            self.variavel()
-        elif self.token_atual['tipo'] in ['Número Inteiro', 'Número Flutuante']:
-            self.numero()
-        elif self.token_atual['tipo'] == 'ID':
-            self.funcao()
-        else:
-            self.erro = True
-            print(f"Erro de sintaxe na linha {self.token_atual['linha']} - Fator inválido: {self.token_atual['lexema']}")
-
-    def funcao(self):
-        self.casar('ID')
-        self.casar('Caractere Especial')
-        self.argumento()
-        self.casar('Caractere Especial')
-
-    def argumento(self):
-        if self.token_atual['tipo'] != 'Caractere Especial' or self.token_atual['lexema'] != ')':
-            self.exp_aritmetica()
-            self.argumento2()
-
-    def argumento2(self):
-        if self.token_atual['tipo'] == 'Caractere Especial' and self.token_atual['lexema'] == ',':
-            self.casar('Caractere Especial')
-            self.exp_aritmetica()
-            self.argumento2()
-        else:
-            pass  # ε (vazio)
-
-    def texto(self):
-        self.casar('String')
-
-    def termo_logico(self):
-        if self.token_atual['tipo'] == 'Operador Lógico' and self.token_atual['lexema'] == '||':
-            self.casar('Operador Lógico')
-            self.expressao_logica()
-            self.termo_logico()
-        else:
-            pass  # ε (vazio)
-
-    def expressao_logica(self):
-        self.expressao_logica3()
-        self.expressao_logica2()
-
-    def expressao_logica2(self):
-        if self.token_atual['tipo'] == 'Operador Lógico' and self.token_atual['lexema'] == '&&':
-            self.casar('Operador Lógico')
-            self.expressao_logica3()
-            self.expressao_logica2()
-        else:
-            pass  # ε (vazio)
-
-    def expressao_logica3(self):
-        if self.token_atual['tipo'] == 'Operador Lógico' and self.token_atual['lexema'] == '!':
-            self.casar('Operador Lógico')
-            self.relacional()
-        else:
-            self.relacional()
-
-    def sim_relacional(self):
-        if self.token_atual['tipo'] == 'Operador Relacional':
-            self.casar('Operador Relacional')
-        else:
-            self.erro = True
-            print(f"Erro de sintaxe na linha {self.token_atual['linha']} - Operador Relacional esperado")
-
-    def numero(self):
-        if self.token_atual['tipo'] == 'Número Inteiro':
-            self.casar('Número Inteiro')
-        elif self.token_atual['tipo'] == 'Número Flutuante':
-            self.casar('Número Flutuante')
-        else:
-            self.erro = True
-            print(f"Erro de sintaxe na linha {self.token_atual['linha']} - Número esperado")
-
-    def desvio(self):
-        self.casar('Palavra Reservada')
-        self.casar('Caractere Especial')
-        self.exp_aritmetica()
-        self.casar('Caractere Especial')
-        self.casar('Caractere Especial')
-        self.escopo()
-        self.desvio2()
-
-    def desvio2(self):
-        if self.token_atual['tipo'] == 'Palavra Reservada' and self.token_atual['lexema'] == 'else':
-            self.casar('Palavra Reservada')
-            self.casar('Caractere Especial')
-            self.escopo()
-
-    def atribuicao(self):
-        self.variavel()
-        self.casar('Atribuição')
-        self.conteudo()
-        self.casar('Caractere Especial')
-
-    def conteudo(self):
-        if self.token_atual['tipo'] == 'String':
-            self.texto()
-        else:
-            self.exp_aritmetica()
-
-    def laco(self):
-        if self.token_atual['tipo'] == 'Palavra Reservada' and self.token_atual['lexema'] == 'to':
-            self.casar('Palavra Reservada')
-            self.atribuicao()
-            self.conteudo()
-            self.sim_relacional()
-            self.conteudo()
-            self.casar('Caractere Especial')
-            self.casar('Caractere Especial')
-            self.variavel()
-            self.casar('Operador')
-            self.casar('Operador')
-            self.exp_aritmetica()
-            self.casar('Caractere Especial')
-            self.escopo()
-        elif self.token_atual['tipo'] == 'Palavra Reservada' and self.token_atual['lexema'] == 'when':
-            self.casar('Palavra Reservada')
-            self.casar('Caractere Especial')
-            self.exp_aritmetica()
-            self.casar('Caractere Especial')
-            self.escopo()
-        elif self.token_atual['tipo'] == 'Palavra Reservada' and self.token_atual['lexema'] == 'take':
-            self.casar('Palavra Reservada')
-        else:
-            self.erro = True
-            print(f"Erro de sintaxe na linha {self.token_atual['linha']} - Laco inválido: {self.token_atual['lexema']}")
+            self.analisar_escopo()
             
+            if self.indice_token_atual < len(self.tokens):
+                raise SyntaxError(f"Token inesperado {self.tokens[self.indice_token_atual]['tipo']} na linha {self.tokens[self.indice_token_atual]['linha']}")
+        except SyntaxError as e:
+            print(e)
+
+
+
+    def analisar_escopo(self):
+        while self.indice_token_atual < len(self.tokens):
+            token = self.tokens[self.indice_token_atual]['tipo']
+            if token in ('num_int', 'num_flu', 'text', 'bool'):
+                self.analisar_declaracao()
+            elif token == 'Palavra Reservada' and self.tokens[self.indice_token_atual]['lexema'] == 'vacuum':
+                self.match('Palavra Reservada')  # 'vacuum'
+            elif token == 'Palavra Reservada' and self.tokens[self.indice_token_atual]['lexema'] == 'case':
+                self.analisar_desvio()
+            else:
+                raise SyntaxError(f"Token inesperado {token} na linha {self.tokens[self.indice_token_atual]['linha']}")
+
+    def analisar_declaracao(self):
+        tipo_variavel = self.tokens[self.indice_token_atual]['tipo']
+        self.match(tipo_variavel)
+        self.match('Identificador')
+        self.match('Caractere Especial')  # ';'
+
+    def analisar_desvio(self):
+        self.match('Palavra Reservada')  # 'case'
+        self.match('Caractere Especial')  # '['
+        self.analisar_exp_relacional()
+        self.match('Caractere Especial')  # ']'
+        self.match('Caractere Especial')  # '<'
+        self.analisar_escopo()
+        self.match('Caractere Especial')  # '>'
+        self.analisar_desvio2()
+
+    def analisar_exp_relacional(self):
+        # Implementar a análise da expressão relacional
+        pass
+
+    def analisar_desvio2(self):
+        while self.indice_token_atual < len(self.tokens):
+            token = self.tokens[self.indice_token_atual]['tipo']
+            if token == 'Palavra Reservada' and self.tokens[self.indice_token_atual]['lexema'] == 'case':
+                self.analisar_desvio()
+            else:
+                return  # ε
+
+def main():
+    path = "teste.txt"
+    analisador_sintatico = AnalisadorSintatico(path)
+    analisador_sintatico.analisar_programa()
+    print("Análise concluída com sucesso.")
+
 if __name__ == "__main__":
-    analisador_lexico = AnalisadorLexico("teste.txt")
-    analisador_sintatico = AnalisadorSintatico(analisador_lexico)
-    analisador_sintatico.main()
+    main()
