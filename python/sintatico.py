@@ -14,88 +14,97 @@ class AnalisadorSintatico:
             else:
                 raise SyntaxError(f"Token inesperado {tipo_token_atual} na linha {self.tokens[self.indice_token_atual]['linha']}")
 
-    def analisar_programa(self):
+#### MÉTODO QUE ANALISA DE FORMA MANUAL O ARQUIVO TESTE.TXT ####
+#### MÉTODO QUE ANALISA DE FORMA MANUAL O ARQUIVO TESTE.TXT ####
+#### MÉTODO QUE ANALISA DE FORMA MANUAL O ARQUIVO TESTE.TXT ####
+
+#def analisar_programa(self):
         #ISSO AQUI É UM MÉTODO QUE LÊ TODO O ARQUIVO "TESTE.TXT" 
-        #FOI UM TRAMPO ENTENDER QUE ERA ISSO.
+        #FOI UM TRAMPO FUNCIONAR ESSA PARTE, ATÉ ENTENDER QUE ERA ASSIM.
 
         #O MÉTODO COMEÇA NA PRIMEIRA LINHA DO "TESTE.TXT" E VAI LENDO ATÉ O FINAL IDENTIFICANDO O QUE CADA TOKEN É.
-        try:
-            self.match('Palavra Reservada')     #fn
-            self.match('Palavra Reservada')     #main
-            self.match('Palavra Reservada')     #vaccum
-            self.match('Especial')              #<
-            self.match('Palavra Reservada')     #num_int
-            self.match('Identificador')         #num1
-            self.match('Operador')              #-
-            self.match('Especial')              #>
-            self.match('Número Inteiro')        #4
-            self.match('Especial')              #;
-            self.match('Palavra Reservada')     #num_int
-            self.match('Identificador')         #num2
-            self.match('Operador')              #-
-            self.match('Especial')              #>
-            self.match('Número Inteiro')        #9
-            self.match('Especial')              #;
-            self.match('Palavra Reservada')     #num_flu
-            self.match('Identificador')         #num3
-            self.match('Operador')              #-
-            self.match('Especial')              #>
-            self.match('Número Flutuante')      #1.7
-            self.match('Especial')              #;
-            self.match('Palavra Reservada')     #text
-            self.match('Identificador')         #palavra
-            self.match('Operador')              #-
-            self.match('Especial')              #>
-            self.match('String')                #"stringAqui"
-            self.match('Especial')              #;
-            self.match('Palavra Reservada')     #bool
-            self.match('Identificador')         #numMaior
-            self.match('Operador')              #-
-            self.match('Especial')              #>
-            self.match('Identificador')         #ok
-            self.match('Especial')              #;
-            self.match('Palavra Reservada')     #num_int
-            self.match('Identificador')         #soma
-            self.match('Operador')              #-
-            self.match('Especial')              #>
-            self.match('Identificador')         #num1
-            self.match('Operador')              #+
-            self.match('Identificador')         #num2
-            self.match('Especial')              #;
-            self.match('Palavra Reservada')     #case
-            self.match('Especial')              #[
-            self.match('Identificador')         #num1
-            self.match('Especial')              #>=
-            self.match('Identificador')         #num2
-            self.match('Especial')              #]
-            self.match('Especial')              #<
-            self.match('Palavra Reservada')     #puts
-            self.match('Especial')              #<
-            self.match('String')                #"palavra"
-            self.match('Especial')              #>
-            self.match('Especial')              #;
-            self.match('Especial')              #>
-            self.match('Identificador')         #ordo
-            self.match('Especial')              #<
-            self.match('Identificador')         #numMaior
-            self.match('Operador')              #-
-            self.match('Especial')              #>
-            self.match('Lógico')                #!
-            self.match('Identificador')         #numMaior
-            self.match('Especial')              #->
-            self.match('Palavra Reservada')     #take
-            self.match('Número Inteiro')        #0
-            self.match('Especial')              #;
-            self.match('Especial')              #>
+        #try:
+          #  self.match('Palavra Reservada')     #fn
+          #  self.match('Palavra Reservada')     #main
+          #  self.match('Palavra Reservada')     #vaccum
+          #  self.match('Especial')              #<
+          #  self.match('Palavra Reservada')     #num_int
+          #  self.match('Identificador')         #num1
+          #  self.match('Operador')              #-
+          #  self.match('Especial')              #>
+          #  self.match('Número Inteiro')        #4
+          #  self.match('Especial')              #;
+          #  self.match('Palavra Reservada')     #num_int
+          #  self.match('Identificador')         #num2
+          #  self.match('Operador')              #-
+          #  self.match('Especial')              #>
+          #  self.match('Número Inteiro')        #9
+          #  self.match('Especial')              #;
+          #  self.match('Palavra Reservada')     #num_flu
+          #  self.match('Identificador')         #num3
+          #  self.match('Operador')              #-
+          #  self.match('Especial')              #>
+          #  self.match('Número Flutuante')      #1.7
+          #  self.match('Especial')              #;
+          #  self.match('Palavra Reservada')     #text
+          #  self.match('Identificador')         #palavra
+          #  self.match('Operador')              #-
+          #  self.match('Especial')              #>
+          #  self.match('String')                #"stringAqui"
+          #  self.match('Especial')              #;
+          #  self.match('Palavra Reservada')     #bool
+          #  self.match('Identificador')         #numMaior
+          #  self.match('Operador')              #-
+          #  self.match('Especial')              #>
+          #  self.match('Identificador')         #ok
+          #  self.match('Especial')              #;
+          #  self.match('Palavra Reservada')     #num_int
+          #  self.match('Identificador')         #soma
+          #  self.match('Operador')              #-
+          #  self.match('Especial')              #>
+          #  self.match('Identificador')         #num1
+          #  self.match('Operador')              #+
+          #  self.match('Identificador')         #num2
+          #  self.match('Especial')              #;
+          #  self.match('Palavra Reservada')     #case
+          #  self.match('Especial')              #[
+          #  self.match('Identificador')         #num1
+          #  self.match('Especial')              #>=
+          #  self.match('Identificador')         #num2
+          #  self.match('Especial')              #]
+          #  self.match('Especial')              #<
+          #  self.match('Palavra Reservada')     #puts
+          #  self.match('Especial')              #<
+          #  self.match('String')                #"palavra"
+          #  self.match('Especial')              #>
+          #  self.match('Especial')              #;
+          #  self.match('Especial')              #>
+          #  self.match('Identificador')         #ordo
+          #  self.match('Especial')              #<
+          #  self.match('Identificador')         #numMaior
+          #  self.match('Operador')              #-
+          #  self.match('Especial')              #>
+          #  self.match('Lógico')                #!
+          #  self.match('Identificador')         #numMaior
+          #  self.match('Especial')              #->
+          #  self.match('Palavra Reservada')     #take
+          #  self.match('Número Inteiro')        #0
+          #  self.match('Especial')              #;
+          #  self.match('Especial')              #>
 
-            self.analisar_escopo()
+          #  self.analisar_escopo()
             
-            if self.indice_token_atual < len(self.tokens):
-                raise SyntaxError(f"Token inesperado {self.tokens[self.indice_token_atual]['tipo']} na linha {self.tokens[self.indice_token_atual]['linha']}")
+          #  if self.indice_token_atual < len(self.tokens):
+          #      raise SyntaxError(f"Token inesperado {self.tokens[self.indice_token_atual]['tipo']} na linha {self.tokens[self.indice_token_atual]#['linha']}")
+        #except SyntaxError as e:
+        #    print(e)
+    def analisar_programa(self):
+        try:
+            while self.indice_token_atual < len(self.tokens):
+                token = self.tokens[self.indice_token_atual]['tipo']
+                self.match(token)
         except SyntaxError as e:
             print(e)
-
-
 
     def analisar_escopo(self):
         while self.indice_token_atual < len(self.tokens):
@@ -140,6 +149,7 @@ class AnalisadorSintatico:
 def main():
     path = "teste.txt"
     analisador_sintatico = AnalisadorSintatico(path)
+    analisador_sintatico.tokens = analisador_sintatico.analisador_lexico.get_tabela_simbolos()  # Carregar os tokens
     analisador_sintatico.analisar_programa()
     print("Análise concluída com sucesso.")
 
