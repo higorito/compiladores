@@ -100,7 +100,7 @@ class AnalisadorLexico:
 
 
     def main(self):
-        tabela_simbolos = self.get_tabela_simbolos()
+        self.tabela_simbolos = self.get_tabela_simbolos()
         self.imprimir_tokens()
 
 
@@ -114,6 +114,6 @@ class AnalisadorLexico:
 
 
 if __name__ == "__main__":
-    analisador = AnalisadorLexico("teste.txt")
+    analisador = AnalisadorLexico("fibonacci.txt")
     analisador.main()  # Chama o método main para iniciar o processo de análise léxica
 

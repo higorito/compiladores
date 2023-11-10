@@ -1,4 +1,4 @@
-fn main vaccum<    
+fn main vacuum<
   num_int num1 -> 4;
   num_int num2 -> 9;
   num_flu num3 -> 1.7;
@@ -6,9 +6,10 @@ fn main vaccum<
   bool numMaior -> ok;
   num_int soma -> num1 + num2;
 
-  case[num1 >= num2 ] <
+  case[num1 >= num2]< 
     puts<"palavra">;
   > ordo<
-      numMaior -> !numMaior  --so estou invertendo o "verdadeiro"/ ok para notok--
+    numMaior -> !numMaior;  -- inverter o valor de numMaior --
     >
-  take 0; > 
+  take 0; 
+>
