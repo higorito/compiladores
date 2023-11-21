@@ -102,7 +102,7 @@
 # TermoRelacional2
 # simbolo_relacional conteudo | ε
 
-from python.lexico import AnalisadorLexico
+from lexico import AnalisadorLexico
 
 class Node:
     def __init__(self, label, children=None):
@@ -131,13 +131,12 @@ class AnalisadorSintatico:
         node = Node('main')
         if (
             self.match('Palavra Reservada')
-            and self.match('main')
             and self.match('Palavra Reservada')
-            and self.match('vacuum')
-            and self.match('<')
+            and self.match('Palavra Reservada')
+            and self.match('Especial')
             and self.lista_declaracao()
             and self.escopo()
-            and self.match('>')
+            and self.match('Especial')
         ):
             return node
         return None
@@ -331,17 +330,17 @@ tokens_exemplo = [
     {'tipo': '>', 'lexema': '>'},
 ]
 
-analisador_sintatico = AnalisadorSintatico(tokens_exemplo)
-arvore_sintatica = analisador_sintatico.parse()
+# analisador_sintatico = AnalisadorSintatico(tokens_exemplo)
+# arvore_sintatica = analisador_sintatico.parse()
 
-if arvore_sintatica:
-    print("Análise sintática bem-sucedida! Árvore sintática gerada:")
-    analisador_sintatico.imprimir_arvore(arvore_sintatica)
-else:
-    print("Erro na análise sintática.")
+# if arvore_sintatica:
+#     print("Análise sintática bem-sucedida! Árvore sintática gerada:")
+#     analisador_sintatico.imprimir_arvore(arvore_sintatica)
+# else:
+#     print("Erro na análise sintática.")
 
 if __name__ == "__main__":
-    analisador_lexico = AnalisadorLexico("fibonacci.txt")
+    analisador_lexico = AnalisadorLexico("teste.txt")
     tokens_controle_fluxo = analisador_lexico.get_tabela_simbolos()
 
     if tokens_controle_fluxo:
