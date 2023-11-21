@@ -1,4 +1,3 @@
-<<<<<<< Updated upstream
 fn main vacuum<
   num_int num1 -> 4;
   num_int num2 -> 9;
@@ -14,18 +13,3 @@ fn main vacuum<
     >
   take 0; 
 >
-=======
-fn main vacuum<
-  num_int num1 -> 4;
-  num_int num2 -> 9;
-  num_flu num3 -> 1.7;
-  text palavra -> "stringAqui";
-  bool numMaior -> ok;
-  num_int soma -> num1 + num2;
-
-  case[num1 >= num2]< 
-    puts<"palavra">;
-  >ordo<numMaior->!numMaior;>
-  take 0; 
->
->>>>>>> Stashed changes
