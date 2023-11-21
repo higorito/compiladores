@@ -11,6 +11,7 @@ class AnalisadorSintatico:
         self.analisador_lexico = AnalisadorLexico(path)
         self.tokens = self.analisador_lexico.get_tabela_simbolos()
         self.indice_token_atual = 0
+        self.no_programa = None  # Adicionado para armazenar a raiz da árvore
 
     def match(self, tipo_esperado):
         if self.indice_token_atual < len(self.tokens):
@@ -24,6 +25,7 @@ class AnalisadorSintatico:
 
     def analisar_programa(self):
         no_programa = No('Programa')
+        self.no_programa = no_programa  # Atribuído para a raiz da árvore
         try:
             no_programa.filhos.append(self.match('Palavra Reservada'))  # 'fn'
             no_programa.filhos.append(self.match('Palavra Reservada'))  # 'main'
@@ -36,7 +38,8 @@ class AnalisadorSintatico:
             no_programa.filhos.append(self.match('Número Inteiro'))  # '4'
             no_programa.filhos.append(self.match('Especial'))  # ';'
             
-            # ADICIONAR MAIS FILHOS AQUI
+            # Adicione mais filhos conforme necessário
+            # Exemplo: no_programa.filhos.append(self.analisar_alguma_coisa())
 
             self.analisar_escopo(no_programa)
 
@@ -74,7 +77,7 @@ class AnalisadorSintatico:
         no_desvio = No('Desvio')
         no_desvio.filhos.append(self.match('Palavra Reservada'))  # 'case'
         no_desvio.filhos.append(self.match('Caractere Especial'))  # '['
-        # ADICIONAR MAIS FILHOS AQUI
+        # Adicione mais filhos conforme necessário
         self.analisar_exp_relacional(no_desvio)
         no_desvio.filhos.append(self.match('Caractere Especial'))  # ']'
         no_desvio.filhos.append(self.match('Caractere Especial'))  # '<'
@@ -85,8 +88,8 @@ class AnalisadorSintatico:
 
         return no_desvio
  
-    def analisar_exp_relacional(self, no_pai): # implementar a análise da expressão relacional
-        
+    def analisar_exp_relacional(self, no_pai):
+        # Implemente a análise da expressão relacional
         pass
 
     def analisar_desvio2(self, no_pai):
@@ -100,11 +103,17 @@ class AnalisadorSintatico:
         
         no_pai.filhos.append(no_desvio2)
 
+def imprimir_arvore_sintatica(no, nivel=0):
+    print("  " * nivel + f"{no.tipo}: {no.lexema}")
+    for filho in no.filhos:
+        imprimir_arvore_sintatica(filho, nivel + 1)
+
 def main():
-    path = "teste.txt"
+    path = r"C:\Users\yanky\Desktop\IFMG 2023\Período 8\Compiladores\compiladores\python\teste.txt"
     analisador_sintatico = AnalisadorSintatico(path)
     analisador_sintatico.analisar_programa()
     print("Análise concluída com sucesso.")
 
 if __name__ == "__main__":
     main()
+

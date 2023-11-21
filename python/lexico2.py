@@ -12,8 +12,8 @@ class AnalisadorLexico:
         self.__tokens_logicos = ['&&', '||', '!']
         self.__caracteres_especiais = ['<', '>', ';', '[', ']']
 
-        # Adicione "main" à lista de palavras reservadas
-        self.__palavras_reservadas = ['main', 'vaccum', 'num_int', 'num_flu', 'text', 'case', 'to', 'when', 'textin', 'textout', 'puts', 'take', 'fn', 'vacuum', 'bool']
+        self.__palavras_reservadas = ['main', 'vacuum', 'num_int', 'num_flu', 'text', 'case', 'to', 'when', 'textin', 'textout', 'puts', 'take', 'fn', 'vacuum', 'bool']
+
 
 
         self.__isComentario = '--'
