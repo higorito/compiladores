@@ -130,14 +130,13 @@ class AnalisadorSintatico:
     def main(self):
         node = Node('main')
         if (
-            self.match('Palavra Reservada')
-            and self.match('main')
-            and self.match('Palavra Reservada')
-            and self.match('vacuum')
-            and self.match('<')
-            and self.lista_declaracao()
-            and self.escopo()
-            and self.match('>')
+            self.match('Palavra Reservada') and
+            self.match('main') and
+            self.match('vacuum') and
+            self.match('<') and
+            self.lista_declaracao() and
+            self.escopo() and
+            self.match('>')
         ):
             return node
         return None
@@ -146,10 +145,10 @@ class AnalisadorSintatico:
         node = Node('ListaDeDeclaracao')
         child = self.declaracao()
         while self.match('|'):
-            child = self.declaracao()
             if not child:
                 return None
             node.add_child(child)
+            child = self.declaracao()
         return node
 
     def declaracao(self):
@@ -183,7 +182,7 @@ class AnalisadorSintatico:
         elif self.lista_declaracao():
             return Node('ListaDeDeclaracao')
         return None
-    
+
     def comando(self):
         if self.entrada() or self.saida() or self.desvio() or self.atribuicao() or self.laco():
             return True
@@ -191,38 +190,38 @@ class AnalisadorSintatico:
 
     def entrada(self):
         if self.match('textin') and self.match('[') and self.variavel() and self.match(']'):
-            return True
-        return False
+            return Node('Entrada')
+        return None
 
     def saida(self):
         if self.match('textout') and self.match('[') and (self.texto() or self.exp_aritmetica()) and self.match(']'):
-            return True
-        return False
+            return Node('Saida')
+        return None
 
     def exp_aritmetica(self):
         return self.exp() or self.termo()
 
     def desvio(self):
         if self.match('case') and self.match('(') and self.exp() and self.match(')') and self.match('<') and self.escopo() and self.match('>') and self.desvio2():
-            return True
-        return False
+            return Node('Desvio')
+        return None
 
     def atribuicao(self):
         if self.variavel() and self.conteudo() and self.match(';'):
-            return True
-        return False
+            return Node('Atribuicao')
+        return None
 
     def conteudo(self):
         return self.texto() or self.exp()
 
     def laco(self):
         if self.match('to') and self.match('(') and self.atribuicao() and self.conteudo() and self.simbolo_relacional() and self.conteudo() and self.match(';') and self.variavel() and self.match('<<') and self.exp_aritmetica() and self.match(')') and self.match('<') and self.escopo() and self.match('>'):
-            return True
+            return Node('LacoTo')
         elif self.match('when') and self.match('(') and self.exp() and self.match(')') and self.match('<') and self.escopo() and self.match('>'):
-            return True
+            return Node('LacoWhen')
         elif self.match('take'):
-            return True
-        return False
+            return Node('Take')
+        return None
 
     def exp(self):
         return self.logico() or self.match('ok') or self.match('notok')
@@ -235,70 +234,75 @@ class AnalisadorSintatico:
 
     def termo2(self):
         if self.match('*') and self.fator() and self.termo2():
-            return True
+            return Node('Multiplicacao')
         elif self.match('/') and self.fator() and self.termo2():
-            return True
+            return Node('Divisao')
         elif self.match('//') and self.fator() and self.termo2():
-            return True
-        return False
+            return Node('DivisaoInteira')
+        return None
 
     def fator(self):
         if self.match('(') and self.exp_aritmetica() and self.match(')'):
-            return True
+            return Node('ExpressaoAritmetica')
         elif self.variavel() or self.numero() or self.funcao():
-            return True
-        return False
+            return Node('Fator')
+        return None
 
     def funcao(self):
         if self.match('Identificador') and self.match('(') and self.argumento() and self.match(')'):
-            return True
-        return False
+            return Node('Funcao')
+        return None
 
     def argumento(self):
         return self.exp_aritmetica() and self.argumento2()
 
     def argumento2(self):
         if self.exp_aritmetica() and self.argumento2():
-            return True
-        return False
+            return Node('Argumento')
+        return None
 
     def texto(self):
         return self.match('String')
 
     def termo_logico(self):
         if self.match('||') and self.expressao_logica() and self.termo_logico():
-            return True
-        return False
+            return Node('OULogico')
+        return None
 
     def expressao_logica(self):
         return self.expressao_logica3() and self.expressao_logica2()
 
     def expressao_logica2(self):
         if self.match('&&') and self.expressao_logica3() and self.expressao_logica2():
-            return True
-        return False
+            return Node('ELogico')
+        return None
 
     def expressao_logica3(self):
         if self.match('!') and self.relacional():
-            return True
+            return Node('NaoLogico')
         elif self.relacional():
-            return True
-        return False
+            return Node('ExpressaoRelacional')
+        return None
 
     def simbolo_relacional(self):
-        return self.match('<<') or self.match('>>') or self.match('<<<') or self.match('>>>') or self.match('==') or self.match('!=') or self.match('ok') or self.match('notok')
+        return (
+            self.match('<<') or self.match('>>') or
+            self.match('<<<') or self.match('>>>') or
+            self.match('==') or self.match('!=') or
+            self.match('ok') or self.match('notok')
+        )
 
     def desvio2(self):
         if self.case_not() and self.match('<') and self.escopo() and self.match('>'):
-            return True
+            return Node('CaseNot')
         elif self.case_not() and self.desvio3():
-            return True
-        return False
+            return Node('CaseNotDesvio3')
+        return None
 
     def desvio3(self):
         if self.match('case') and self.match('(') and self.exp() and self.match(')') and self.match('<') and self.escopo() and self.match('>') and self.desvio2():
-            return True
-        return True
+            return Node('CaseDesvio2')
+        return None
 
     def relacional(self):
         return self.logico() or self.termo_relacional()
@@ -308,40 +312,38 @@ class AnalisadorSintatico:
 
     def termo_relacional2(self):
         if self.simbolo_relacional() and self.conteudo():
-            return True
-        return False
+            return Node('TermoRelacional')
+        return None
 
     def case_not(self):
         return self.match('caseNot')
-    
+
+    def numero(self):
+        return self.match('Numero')
+
     def imprimir_arvore(self, node, nivel=0):
         if node:
             print('  ' * nivel + f'{node.label}')
             for child in node.children:
                 self.imprimir_arvore(child, nivel + 1)
 
+# Tokens de exemplo
 tokens_exemplo = [
     {'tipo': 'Palavra Reservada', 'lexema': 'main'},
-    {'tipo': 'Palavra Reservada', 'lexema': 'num_int'},
-    {'tipo': 'Identificador', 'lexema': 'x'},
-    {'tipo': ';', 'lexema': ';'},
-    {'tipo': 'vacuum', 'lexema': 'vacuum'},
+    {'tipo': 'Palavra Reservada', 'lexema': 'vacuum'},
     {'tipo': '<', 'lexema': '<'},
     {'tipo': 'Identificador', 'lexema': 'x'},
     {'tipo': '>', 'lexema': '>'},
+    {'tipo': 'Palavra Reservada', 'lexema': 'textin'},
+    {'tipo': '[', 'lexema': '['},
+    {'tipo': 'Identificador', 'lexema': 'y'},
+    {'tipo': ']', 'lexema': ']'},
+    {'tipo': ';', 'lexema': ';'},
 ]
 
-analisador_sintatico = AnalisadorSintatico(tokens_exemplo)
-arvore_sintatica = analisador_sintatico.parse()
-
-if arvore_sintatica:
-    print("Análise sintática bem-sucedida! Árvore sintática gerada:")
-    analisador_sintatico.imprimir_arvore(arvore_sintatica)
-else:
-    print("Erro na análise sintática.")
-
 if __name__ == "__main__":
-    analisador_lexico = AnalisadorLexico("fibonacci.txt")
+    # Análise léxica
+    analisador_lexico = AnalisadorLexico("teste.txt")
     tokens_controle_fluxo = analisador_lexico.get_tabela_simbolos()
 
     if tokens_controle_fluxo:
@@ -350,7 +352,7 @@ if __name__ == "__main__":
     else:
         print("Erro na análise léxica.")
 
-    # Agora, vamos usar os tokens gerados na análise sintática
+    # Análise sintática
     analisador_sintatico = AnalisadorSintatico(tokens_controle_fluxo)
     arvore_sintatica_controle_fluxo = analisador_sintatico.parse()
 
@@ -359,5 +361,3 @@ if __name__ == "__main__":
         analisador_sintatico.imprimir_arvore(arvore_sintatica_controle_fluxo)
     else:
         print("\nErro na análise sintática.")
-
-
