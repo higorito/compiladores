@@ -1,3 +1,4 @@
+import os
 class AnalisadorLexico:
     def __init__(self, path: str):
         self.__tabela_simbolos = []

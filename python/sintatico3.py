@@ -130,13 +130,14 @@ class AnalisadorSintatico:
     def main(self):
         node = Node('main')
         if (
-            self.match('Palavra Reservada') and
-            self.match('main') and
-            self.match('vacuum') and
-            self.match('<') and
-            self.lista_declaracao() and
-            self.escopo() and
-            self.match('>')
+            self.match('Palavra Reservada')
+            and self.match('main')
+            and self.match('Palavra Reservada')
+            and self.match('vacuum')
+            and self.match('<')
+            and self.lista_declaracao()
+            and self.escopo()
+            and self.match('>')
         ):
             return node
         return None
@@ -334,16 +335,19 @@ tokens_exemplo = [
     {'tipo': '<', 'lexema': '<'},
     {'tipo': 'Identificador', 'lexema': 'x'},
     {'tipo': '>', 'lexema': '>'},
-    {'tipo': 'Palavra Reservada', 'lexema': 'textin'},
-    {'tipo': '[', 'lexema': '['},
-    {'tipo': 'Identificador', 'lexema': 'y'},
-    {'tipo': ']', 'lexema': ']'},
-    {'tipo': ';', 'lexema': ';'},
 ]
 
+analisador_sintatico = AnalisadorSintatico(tokens_exemplo)
+arvore_sintatica = analisador_sintatico.parse()
+
+if arvore_sintatica:
+    print("Análise sintática bem-sucedida! Árvore sintática gerada:")
+    analisador_sintatico.imprimir_arvore(arvore_sintatica)
+else:
+    print("Erro na análise sintática.")
+
 if __name__ == "__main__":
-    # Análise léxica
-    analisador_lexico = AnalisadorLexico("teste.txt")
+    analisador_lexico = AnalisadorLexico("fibonacci.txt")
     tokens_controle_fluxo = analisador_lexico.get_tabela_simbolos()
 
     if tokens_controle_fluxo:
