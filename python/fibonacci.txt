@@ -20,5 +20,6 @@ fn main vacuum<
   >
 
   num_int resultado -> fib(n);
-  puts<"O ", n, " numero de Fibonacci eh: ", resultado>;
+  puts<"O numero de Fibonacci eh: ">;
+  puts<resultado>;
 >

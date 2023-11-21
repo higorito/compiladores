@@ -102,7 +102,7 @@
 # TermoRelacional2
 # simbolo_relacional conteudo | ε
 
-from lexico2 import AnalisadorLexico
+from python.lexico import AnalisadorLexico
 
 class Node:
     def __init__(self, label, children=None):

@@ -104,7 +104,7 @@
 
 
 
-from lexico2 import AnalisadorLexico
+from python.lexico import AnalisadorLexico
 
 class No:
     def __init__(self, tipo, lexema=None):
