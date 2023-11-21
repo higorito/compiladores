@@ -1,0 +1,11 @@
+main vacuum<
+  num_int x -> 5;
+  
+  case[x > 0]<
+    puts<"x é positivo">;
+  > ordo<
+    puts<"x é não positivo">;
+  >
+
+  take 0; 
+>
