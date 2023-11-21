@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 main vacuum<
   num_int x -> 5;
   
@@ -9,3 +10,16 @@ main vacuum<
 
   take 0; 
 >
+=======
+main vacuum<
+  num_int x -> 5;
+  
+  case[x > 0]<
+    puts<"x é positivo">;
+  > ordo<
+    puts<"x é não positivo">;
+  >
+
+  take 0; 
+>
+>>>>>>> d35d44426cd5af907ad67571ca4ea81ab8d1da42
