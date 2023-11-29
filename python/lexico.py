@@ -115,6 +115,6 @@ class AnalisadorLexico:
 
 
 if __name__ == "__main__":
-    analisador = AnalisadorLexico("fibonacci.txt")
+    analisador = AnalisadorLexico("teste.txt")
     analisador.main()  # Chama o método main para iniciar o processo de análise léxica
 
