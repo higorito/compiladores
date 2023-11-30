@@ -1,4 +1,4 @@
-fn main vacuum<
+main vacuum<
   num_int n -> 10;  -- Defina o valor de n conforme necessário --
 
   num_int fib(num_int x) <

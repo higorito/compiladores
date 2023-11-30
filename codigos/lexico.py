@@ -13,7 +13,7 @@ class AnalisadorLexico:
         self.__tokens_logicos = ['&&', '||', '!']
         self.__caracteres_especiais = ['<', '>', ';', '[', ']']
 
-        self.__palavras_reservadas = ['main', 'vacuum', 'num_int', 'num_flu', 'text', 'case', 'to', 'when', 'textin', 'textout', 'puts', 'take', 'fn', 'vacuum', 'bool']
+        self.__palavras_reservadas = ['main', 'vacuum', 'num_int', 'num_flu', 'text', 'case', 'to', 'when', 'textin', 'textout', 'puts', 'take', 'bool']
 
 
         self.__isComentario = '--'
@@ -115,42 +115,38 @@ class AnalisadorLexico:
 
     
 
-    def erros_lexicos_escopo(self):
-        pilha_escopos = []
-        dentro_token = False
+    # def erros_lexicos_escopo(self):
+    #     pilha_escopos = []
+    #     dentro_token = False
+       
 
-        for i, char in enumerate(self._conteudo):
-            if char == '<':
-                pilha_escopos.append('<')
-            elif char == '>':
-                if not dentro_token:
-                    if not pilha_escopos or pilha_escopos[-1] != '<':
-                        print(f"Erro lexico: Escopo '>' sem o correspondente '<' na linha {self.__linha}")
-                    else:
-                        pilha_escopos.pop()
-                else:
-                    #se faz parte do token, não processar como escopo
-                    pass
-            elif char == '[':
-                pilha_escopos.append('[')
-            elif char == ']':
-                if not dentro_token:
-                    if not pilha_escopos or pilha_escopos[-1] != '[':
-                        print(f"Erro lexico: Escopo ']' sem o correspondente '[' na linha {self.__linha}")
-                    else:
-                        pilha_escopos.pop()
-                else:
-                    #se faz parte do token, não processar como escopo
-                    pass
-            elif char == '=':
-                #verificando se o próximo caractere é '>'
-                if i + 1 < len(self._conteudo) and self._conteudo[i + 1] == '>':
-                    dentro_token = True
-            elif char.isalnum() or char == '_':
-                dentro_token = False
+    #     for i, char in enumerate(self._conteudo):
+    #         if char in {'<', '>', '[', ']'}:
+    #             if not dentro_token:
+    #                 if char == '<' or char == '>':
+    #                     pilha_escopos.append(char)
+    #                 elif char == '[':
+    #                     pilha_escopos.append('[')
+    #                 else:  # char == ']'
+    #                     if not pilha_escopos or pilha_escopos[-1] != '[':
+    #                         print(f"Erro léxico: Escopo ']' sem o correspondente '[' na linha {self.__linha}")
+    #                     else:
+    #                         pilha_escopos.pop()
+    #         elif char == '=':
+    #             # Verificando se o próximo caractere forma um token relacional
+    #             if i + 1 < len(self._conteudo) and not self._conteudo[i + 1].isalnum():
+    #                 possivel_token = char + self._conteudo[i + 1]
+    #                 if possivel_token in self.__tokens_relacionais:
+    #                     dentro_token = True
+    #                 elif possivel_token == '=>':
+    #                     dentro_token = False
+    #                     # Considerando '=>' como um único token relacional
+    #                     pilha_escopos.append(possivel_token)
+    #         elif char.isalnum() or char == '_':
+    #             dentro_token = False
 
-        for escopo in pilha_escopos:
-            print(f"Erro lexico: Escopo '{escopo}' aberto na linha {self.__linha} nao foi fechado")
+    #     for escopo in pilha_escopos:
+    #         print(f"Erro léxico: Escopo '{escopo}' aberto na linha {self.__linha} não foi fechado")
     
     def verificar_tokens_validos(self):
         tokens_validos = set([ #pode adcionar outros tokens ou modificar
@@ -196,5 +192,6 @@ class AnalisadorLexico:
         self.imprimir_tokens()
 
 if __name__ == "__main__":
-    analisador = AnalisadorLexico("erros/erro-lexico-acento.if")
+    # analisador = AnalisadorLexico("erros/erro-lexico-acento.if")
+    analisador = AnalisadorLexico("cod.txt")
     analisador.main()

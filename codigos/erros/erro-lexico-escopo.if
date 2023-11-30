@@ -1,4 +1,4 @@
-fn main vacuum 
+main vacuum 
     num_flu preco => 29.91;
 
 

@@ -1,8 +1,7 @@
-fn main vacuum <
-    num_flu num => 2.1;   
-    num_flu num1 => 3.2;
-    
-    
-    text stringaux => olaa;
-    
+main vacuum <
+    num_flu num => 2.1;
+    when (num == 2.1) <
+        textout [ "Número é 2.1" ];
+    >
+    take;
 >

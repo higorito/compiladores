@@ -1,4 +1,4 @@
-fn main vacuum<
+main vacuum<
 
     text stringaux => "testando;
 >;
