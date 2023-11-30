@@ -184,7 +184,7 @@ class AnalisadorLexico:
 
     def main(self):
         self.tabela_simbolos = self.get_tabela_simbolos()
-        self.erros_lexicos_escopo()
+        # self.erros_lexicos_escopo()
         self.verificar_tokens_validos()
         self.encontrar_identificadores_duplicados()
 

@@ -122,25 +122,37 @@ class AnalisadorSintatico:
         return self.main()
 
     def match(self, tipo_esperado):
-        if self.posicao < len(self.tokens) and self.tokens[self.posicao]['tipo'] == tipo_esperado:
-            self.posicao += 1
-            return True
-        return False
+        if self.posicao < len(self.tokens):
+            tipo_token, lexema, _ = self.tokens[self.posicao]
+
+            if tipo_token == tipo_esperado:
+                print(f'Match bem-sucedido: {tipo_esperado} ({lexema})')
+                return True, lexema
+            else:
+                print(f'Erro de match: esperado {tipo_esperado}, mas obtido {tipo_token} ({lexema})')
+        else:
+            print('Erro de match: final dos tokens alcançado')
+        return False, None
 
     def main(self):
         node = Node('main')
+        inicio_posicao = self.posicao  # Salva a posição inicial
+
         if (
-            self.match('Palavra Reservada')
+            self.match('PALAVRA_RESERVADA')
             and self.match('main')
-            and self.match('Palavra Reservada')
+            and self.match('PALAVRA_RESERVADA')
             and self.match('vacuum')
-            and self.match('<')
+            and self.match('SIM_ESPECIAL')
             and self.lista_declaracao()
             and self.escopo()
-            and self.match('>')
+            and self.match('SIM_ESPECIAL')
         ):
             return node
-        return None
+        else:
+            print('Erro na regra principal, reiniciando análise...')
+            self.posicao = inicio_posicao  # Reinicia a posição
+            return None
 
     def lista_declaracao(self):
         node = Node('ListaDeDeclaracao')
@@ -165,14 +177,14 @@ class AnalisadorSintatico:
         return None
 
     def tipo_var(self):
-        return self.match('Palavra Reservada')
+        return self.match('PALAVRA_RESERVADA')
 
     def variavel(self):
-        return self.match('Identificador')
+        return self.match('IDENTIFICADOR')
 
     def escopo(self):
         node = Node('escopo')
-        if self.match('Palavra Reservada'):
+        if self.match('PALAVRA_RESERVADA'):
             child = self.lista_declaracao()
             if child:
                 node.add_child(child)
@@ -250,7 +262,7 @@ class AnalisadorSintatico:
         return None
 
     def funcao(self):
-        if self.match('Identificador') and self.match('(') and self.argumento() and self.match(')'):
+        if self.match('IDENTIFICADOR') and self.match('(') and self.argumento() and self.match(')'):
             return Node('Funcao')
         return None
 
@@ -324,17 +336,18 @@ class AnalisadorSintatico:
 
     def imprimir_arvore(self, node, nivel=0):
         if node:
-            print('  ' * nivel + f'{node.label}')
+            lexema = self.tokens[node.posicao - 1]['lexema']
+            tipo = self.tokens[node.posicao - 1]['tipo']
+            print('  ' * nivel + f'{node.label} ({tipo}: {lexema})')
+
             for child in node.children:
                 self.imprimir_arvore(child, nivel + 1)
 
 # Tokens de exemplo
 tokens_exemplo = [
-    {'tipo': 'Palavra Reservada', 'lexema': 'main'},
-    {'tipo': 'Palavra Reservada', 'lexema': 'vacuum'},
-    {'tipo': '<', 'lexema': '<'},
-    {'tipo': 'Identificador', 'lexema': 'x'},
-    {'tipo': '>', 'lexema': '>'},
+    {'PALAVRA_RESERVADA', 'main', 'Linha 1'},
+    {'PALAVRA_RESERVADA', 'vacuum', 'Linha 1'},
+    {'SIM_ESPECIAL', '<', 'Linha 1'},
 ]
 
 analisador_sintatico = AnalisadorSintatico(tokens_exemplo)
@@ -347,7 +360,7 @@ else:
     print("Erro na análise sintática.")
 
 if __name__ == "__main__":
-    analisador_lexico = AnalisadorLexico("fibonacci.txt")
+    analisador_lexico = AnalisadorLexico("cod.txt")
     tokens_controle_fluxo = analisador_lexico.get_tabela_simbolos()
 
     if tokens_controle_fluxo:
