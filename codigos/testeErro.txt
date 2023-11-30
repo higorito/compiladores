@@ -2,7 +2,7 @@ fn main vacuum<
   num_int num1 => 4;
   num_int num2 => 9;
   num_flu num3 => 1.7;
-  text palavra => "stringAqui";
+  text palavra => 
   bool numMaior => ok;
   num_int soma => num1 + num2;
 
@@ -12,4 +12,4 @@ fn main vacuum<
     numMaior => !numMaior;  -- inverter o valor de numMaior --
     >
   take 0; 
->;
+>
