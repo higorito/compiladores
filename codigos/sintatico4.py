@@ -122,21 +122,35 @@ class AnalisadorSintatico:
         return self.main()
 
     def match(self, tipo_esperado):
-        if self.posicao < len(self.tokens) and self.tokens[self.posicao]['tipo'] == tipo_esperado:
-            self.posicao += 1
-            return True
-        return False
+        print("tipo esperado"+ tipo_esperado)
 
+        if self.posicao < len(self.tokens):
+            token_atual = self.tokens[self.posicao]
+            print(self.tokens)
+            print(tipo_esperado)
+            print(self.tokens[self.posicao])
+
+            print(f"Debug: token_atual = {token_atual}")  # Adicione esta linha para depuração
+            if token_atual['tipo'] == tipo_esperado:
+                self.posicao += 1
+                return True
+
+        return False
+    
     def main(self):
         node = Node('main')
+        print(self.tokens)
         if (
-            self.match('Palavra Reservada')
+            
+            self.match('PALAVRA_RESERVADA')
             and self.match('main')
-            and self.match('Palavra Reservada')
+            and self.match('PALAVRA_RESERVADA')
             and self.match('vacuum')
+            and self.match('SIM_ESPECIAL')
             and self.match('<')
-            and self.lista_declaracao()
+            # and self.lista_declaracao()
             and self.escopo()
+            and self.match('SIM_ESPECIAL')
             and self.match('>')
         ):
             return node
@@ -165,14 +179,14 @@ class AnalisadorSintatico:
         return None
 
     def tipo_var(self):
-        return self.match('Palavra Reservada')
+        return self.match('PALAVRA_RESERVADA')
 
     def variavel(self):
         return self.match('Identificador')
 
     def escopo(self):
         node = Node('escopo')
-        if self.match('Palavra Reservada'):
+        if self.match('PALAVRA_RESERVADA'):
             child = self.lista_declaracao()
             if child:
                 node.add_child(child)
@@ -330,31 +344,42 @@ class AnalisadorSintatico:
 
 # Tokens de exemplo
 # tokens_exemplo = [
-#     {'tipo': 'Palavra Reservada', 'lexema': 'main'},
-#     {'tipo': 'Palavra Reservada', 'lexema': 'vacuum'},
+#     {'tipo': 'PALAVRA_RESERVADA', 'lexema': 'main'},
+#     {'tipo': 'PALAVRA_RESERVADA', 'lexema': 'vacuum'},
 #     {'tipo': '<', 'lexema': '<'},
 #     {'tipo': 'Identificador', 'lexema': 'x'},
 #     {'tipo': '>', 'lexema': '>'},
 # ]
 
-tokens_exemplo = [
-    "PALAVRA_RESERVADA, main, Linha 1",
-    "PALAVRA_RESERVADA, vacuum, Linha 1",
-    "SIM_   , <, Linha 1",
-]
+# tokens_exemplo = [
+#     "PALAVRA_RESERVADA, main, Linha 1",
+#     "PALAVRA_RESERVADA, vacuum, Linha 1",
+#     "SIM_ESPECIAL, <, Linha 1",
+# ]
 
-analisador_sintatico = AnalisadorSintatico(tokens_exemplo)
-arvore_sintatica = analisador_sintatico.parse()
+# analisador_sintatico = AnalisadorSintatico(tokens_exemplo)
+# arvore_sintatica = analisador_sintatico.parse()
 
-if arvore_sintatica:
-    print("Análise sintática bem-sucedida! Árvore sintática gerada:")
-    analisador_sintatico.imprimir_arvore(arvore_sintatica)
-else:
-    print("Erro na análise sintática.")
+# if arvore_sintatica:
+#     print("Análise sintática bem-sucedida! Árvore sintática gerada:")
+#     analisador_sintatico.imprimir_arvore(arvore_sintatica)
+# else:
+#     print("Erro na análise sintática.")
+
+
 
 if __name__ == "__main__":
-    analisador_lexico = AnalisadorLexico("fibonacci.txt")
-    tokens_controle_fluxo = analisador_lexico.get_tabela_simbolos()
+    analisador_lexico = AnalisadorLexico("cod.txt")
+    # tokens_controle_fluxo = analisador_lexico.get_tabela_simbolos()
+     
+    #usando essa bosta aq pra testar o sintatico o tipo ideal que vem do lexico...
+    tokens_controle_fluxo = [
+
+    {'tipo': 'PALAVRA_RESERVADA', 'lexema': 'main', 'Linha': 1},
+    {'tipo': 'PALAVRA_RESERVADA', 'lexema': 'vacuum', 'Linha': 1},
+    {'tipo': 'SIM_ESPECIAL', 'lexema': '<', 'Linha': 1},
+    {'tipo': 'SIM_ESPECIAL', 'lexema': '>', 'Linha': 2},
+    ]
 
     if tokens_controle_fluxo:
         print("Análise léxica bem-sucedida! Tokens gerados:")

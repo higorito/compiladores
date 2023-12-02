@@ -195,3 +195,6 @@ if __name__ == "__main__":
     # analisador = AnalisadorLexico("erros/erro-lexico-acento.if")
     analisador = AnalisadorLexico("cod.txt")
     analisador.main()
+
+
+#LEXICO ESTA QUASE 100% FALTA CORRIGIR OS BUGS DO TRATAMENTO DE ERRO ID REPETIDO E ESCOPO

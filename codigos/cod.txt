@@ -1,7 +1,4 @@
 main vacuum <
-    num_flu num => 2.1;
-    when (num == 2.1) <
-        textout [ "Número é 2.1" ];
-    >
-    take;
+    num_flu num => 2.1;  --comentaraio--
+   
 >
