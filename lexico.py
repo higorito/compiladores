@@ -61,11 +61,11 @@ class AnalisadorLexico:
         self.__tokens_logicos = ['&&', '||', '!']
         self.__caracteres_especiais = ['<', '>', ';', '[', ']']
 
-        self.__palavras_reservadas = ['main', 'vacuum', 'num_int', 'num_flu', 'text', 'case', 'to', 'when', 'textin', 'textout', 'puts', 'take', 'bool']
+        self.__palavras_reservadas = ['main', 'vacuum', 'num_int', 'num_flu', 'text', 'case', 'to', 'when', 'textin', 'textout', 'puts', 'take', 'bool','num']
 
 
         self.__isComentario = '--'
-        self.__isAtribuicao = '=>'
+        self.__isAtribuicao = '=>' or '->'
         self.__isString = '"'
         self.__fim_linha = '\n'
         self.__fim_arquivo = '\0'
@@ -87,8 +87,8 @@ class AnalisadorLexico:
                 if self.__cab_leitura < len(self._conteudo):
                     self.__cab_leitura += 1
                     self.__linha += 1
-            elif self._conteudo[self.__cab_leitura:self.__cab_leitura + 2] == '=>':
-                self.adicionar_token('ATRIBUICAO', '=>')
+            elif self._conteudo[self.__cab_leitura:self.__cab_leitura + 2] in ['=>', '->']:
+                self.adicionar_token('ATRIBUICAO', self._conteudo[self.__cab_leitura:self.__cab_leitura + 2])
                 self.__cab_leitura += 2
             elif self.__isString and char == '"':
                 self.__estado = 4
@@ -198,12 +198,12 @@ class AnalisadorLexico:
     #         print(f"Erro léxico: Escopo '{escopo}' aberto na linha {self.__linha} não foi fechado")
     
     def verificar_tokens_validos(self):
-        tokens_validos = set([ #pode adcionar outros tokens ou modificar
+        tokens_validos = set([ #pode adicionar outros tokens ou modificar
             'OP_ARITMETICO', 'OP_RELACIONAL', 
             'OP_LOGICO', 'SIM_ESPECIAL',
             'IDENTIFICADOR', 'NUM_INT',
             'NUM_FLU', 'TEXT', 'PALAVRA_RESERVADA',
-            'ATRIBUICAO', 
+            'ATRIBUICAO',  'LISTADEDECLARACAO'
         ])  
 
         for token in self.__tabela_simbolos:
