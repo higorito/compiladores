@@ -59,13 +59,13 @@ class AnalisadorLexico:
         self.__tokens_aritmeticos = ['+', '-', '*', '/', '//', '**']
         self.__tokens_relacionais = ['==', '!=', '>=', '<=', '>>', '<<']
         self.__tokens_logicos = ['&&', '||', '!']
-        self.__caracteres_especiais = ['<', '>', ';', '[', ']']
+        self.__caracteres_especiais = ['@', ';', '[', ']']
 
-        self.__palavras_reservadas = ['main', 'vacuum', 'num_int', 'num_flu', 'text', 'case', 'to', 'when', 'textin', 'textout', 'puts', 'take', 'bool','num']
+        self.__palavras_reservadas = ['main', 'num_int', 'num_flu', 'text', 'case', 'to', 'when', 'textin', 'textout', 'puts', 'take', 'bool', 'ordo']
 
 
         self.__isComentario = '--'
-        self.__isAtribuicao = '=>' or '->'
+        self.__isAtribuicao =  '->'
         self.__isString = '"'
         self.__fim_linha = '\n'
         self.__fim_arquivo = '\0'
@@ -87,7 +87,10 @@ class AnalisadorLexico:
                 if self.__cab_leitura < len(self._conteudo):
                     self.__cab_leitura += 1
                     self.__linha += 1
-            elif self._conteudo[self.__cab_leitura:self.__cab_leitura + 2] in ['=>', '->']:
+            elif self._conteudo[self.__cab_leitura:self.__cab_leitura + 2] in self.__tokens_relacionais:
+                self.adicionar_token('OP_RELACIONAL', self._conteudo[self.__cab_leitura:self.__cab_leitura + 2])
+                self.__cab_leitura += 2
+            elif self._conteudo[self.__cab_leitura:self.__cab_leitura + 2] in ['->']:
                 self.adicionar_token('ATRIBUICAO', self._conteudo[self.__cab_leitura:self.__cab_leitura + 2])
                 self.__cab_leitura += 2
             elif self.__isString and char == '"':
@@ -143,8 +146,8 @@ class AnalisadorLexico:
 
                 if self.__lexema in self.__tokens_aritmeticos:
                     self.adicionar_token('OP_ARITMETICO', self.__lexema)
-                elif self.__lexema in self.__tokens_relacionais:
-                    self.adicionar_token('OP_RELACIONAL', self.__lexema)
+                # elif self.__lexema in self.__tokens_relacionais:
+                #     self.adicionar_token('OP_RELACIONAL', self.__lexema)
                 elif self.__lexema in self.__tokens_logicos:
                     self.adicionar_token('OP_LOGICO', self.__lexema)
                 elif self.__lexema in self.__caracteres_especiais:
