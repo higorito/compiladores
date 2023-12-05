@@ -40,7 +40,7 @@
 # < | > | ; | [ | ]
 
 # Atribuição
-# ID =>
+# ID => | ->
 
 # Ignorar espaços em branco
 # \s
@@ -86,12 +86,12 @@ class AnalisadorSintatico:
         node = Node('main')   #cria um nó para representar a regra <main>
 
         #tenta fazer correspondência com PALAVRA_RESERVADA, SIM_ESPECIAL, IDENTIFICADOR, NUM_INT, NUM_FLU, ou TEXT
-        lexema = self.match('PALAVRA_RESERVADA') or self.match('SIM_ESPECIAL') or self.match('IDENTIFICADOR') or self.match('NUM_INT') or self.match('NUM_FLU') or self.match('TEXT')
+        lexema = self.match('PALAVRA_RESERVADA') or self.match('SIM_ESPECIAL') or self.match('IDENTIFICADOR') or self.match('NUM_INT') or self.match('NUM_FLU') or self.match('TEXT') or self.match('ATRIBUICAO') or self.match('OP_ARITMETICO') or self.match('OP_RELACIONAL') or self.match('OP_LOGICO')
 
         #enquanto houver correspondência, adiciona o lexema como filho
         while lexema:
             node.add_child(Node(lexema))
-            lexema = self.match('PALAVRA_RESERVADA') or self.match('SIM_ESPECIAL') or self.match('IDENTIFICADOR') or self.match('NUM_INT') or self.match('NUM_FLU') or self.match('TEXT')
+            lexema = self.match('PALAVRA_RESERVADA') or self.match('SIM_ESPECIAL') or self.match('IDENTIFICADOR') or self.match('NUM_INT') or self.match('NUM_FLU') or self.match('TEXT') or self.match('ATRIBUICAO') or self.match('OP_ARITMETICO') or self.match('OP_RELACIONAL') or self.match('OP_LOGICO')
 
         #tenta corresponder às declarações (ListaDeDeclaracao)
         declaracoes = self.lista_declaracao()
@@ -138,7 +138,7 @@ class AnalisadorSintatico:
             token_atual = self.tokens[self.posicao]
 
             #mensagem de debug para exibir o tipo esperado e o token atual
-            print(f"debug: tipo_esperado = PALAVRA_RESERVADA, token_atual = {token_atual['lexema']}")
+            #print(f"debug: tipo_esperado = PALAVRA_RESERVADA, token_atual = {token_atual['lexema']}")
 
             #verifica se o token atual é uma palavra reservada 'text'
             if token_atual['tipo'] == 'PALAVRA_RESERVADA' and token_atual['lexema'] == 'text':
@@ -354,18 +354,7 @@ class AnalisadorSintatico:
                 for child in node.children:
                     self.imprimir_arvore(child, nivel + 1)
 
-    def imprimir_arvore(self, node, nivel=0):
-        if node:
-            if not node.children:
-                #é um nó folha, exibe apenas o lexema (se houver)
-                lexema = node.children[0].label if node.children else ""
-                print('  ' * nivel + f'{node.label}: {lexema}')
-            else:
-                #é um nó interno, exibe o rótulo da regra gramatical
-                print('  ' * nivel + f'{node.label}')
 
-                for child in node.children:
-                    self.imprimir_arvore(child, nivel + 1)
 
 # Tokens de exemplo
 # tokens_exemplo = [
@@ -394,7 +383,7 @@ class AnalisadorSintatico:
 
 
 if __name__ == "__main__":
-    analisador_lexico = AnalisadorLexico("fibonacci.txt")
+    analisador_lexico = AnalisadorLexico("cod.txt")
     tokens_controle_fluxo = analisador_lexico.get_tabela_simbolos()
 
     if tokens_controle_fluxo:
