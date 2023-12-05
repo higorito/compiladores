@@ -1,0 +1,21 @@
+fn main  vaccum <    
+  num_int num1 -> 4;
+  num_int num2 -> 9;
+  num_flu num3 -> 1.7;
+  text palavra -> "stringAqui";
+
+  bool numMaior -> ok;
+  
+  num_int soma -> num1 + num2;
+
+  case[num1 >= num2 ] <
+
+    puts<"palavra">;
+
+  > ordo<
+
+      numMaior -> !numMaior  --so estou invertendo o "verdadeiro"/ ok para notok--
+
+    >
+  
+  take 0; > 
