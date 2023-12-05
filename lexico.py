@@ -242,5 +242,5 @@ class AnalisadorLexico:
 
 if __name__ == "__main__":
     # analisador = AnalisadorLexico("erros/erro-lexico-acento.if")
-    analisador = AnalisadorLexico("cod.txt")
+    analisador = AnalisadorLexico("teste.txt")
     analisador.main()
