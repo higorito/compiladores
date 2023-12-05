@@ -45,6 +45,8 @@
 # Ignorar espaços em branco
 # \s
 
+from ast import And
+# from re import match
 from lexico import AnalisadorLexico
 
 #classe para representar um nó na árvore sintática
@@ -86,7 +88,9 @@ class AnalisadorSintatico:
         node = Node('main')   #cria um nó para representar a regra <main>
 
         #tenta fazer correspondência com PALAVRA_RESERVADA, SIM_ESPECIAL, IDENTIFICADOR, NUM_INT, NUM_FLU, ou TEXT
-        lexema = self.match('PALAVRA_RESERVADA') or self.match('SIM_ESPECIAL') or self.match('IDENTIFICADOR') or self.match('NUM_INT') or self.match('NUM_FLU') or self.match('TEXT')
+        # lexema = self.match('PALAVRA_RESERVADA') or self.match('SIM_ESPECIAL') or self.match('IDENTIFICADOR') or self.match('NUM_INT') or self.match('NUM_FLU') or self.match('TEXT')
+
+        lexema = self.match('PALAVRA_RESERVADA') and self.match('PALAVRA_RESERVADA') and self.match('SIM_ESPECIAL')
 
         #enquanto houver correspondência, adiciona o lexema como filho
         while lexema:
@@ -354,18 +358,18 @@ class AnalisadorSintatico:
                 for child in node.children:
                     self.imprimir_arvore(child, nivel + 1)
 
-    def imprimir_arvore(self, node, nivel=0):
-        if node:
-            if not node.children:
-                #é um nó folha, exibe apenas o lexema (se houver)
-                lexema = node.children[0].label if node.children else ""
-                print('  ' * nivel + f'{node.label}: {lexema}')
-            else:
-                #é um nó interno, exibe o rótulo da regra gramatical
-                print('  ' * nivel + f'{node.label}')
+    # def imprimir_arvore(self, node, nivel=0):
+    #     if node:
+    #         if not node.children:
+    #             #é um nó folha, exibe apenas o lexema (se houver)
+    #             lexema = node.children[0].label if node.children else ""
+    #             print('  ' * nivel + f'{node.label}: {lexema}')
+    #         else:
+    #             #é um nó interno, exibe o rótulo da regra gramatical
+    #             print('  ' * nivel + f'{node.label}')
 
-                for child in node.children:
-                    self.imprimir_arvore(child, nivel + 1)
+    #             for child in node.children:
+    #                 self.imprimir_arvore(child, nivel + 1)
 
 # Tokens de exemplo
 # tokens_exemplo = [
@@ -394,7 +398,7 @@ class AnalisadorSintatico:
 
 
 if __name__ == "__main__":
-    analisador_lexico = AnalisadorLexico("fibonacci.txt")
+    analisador_lexico = AnalisadorLexico("cod.txt")
     tokens_controle_fluxo = analisador_lexico.get_tabela_simbolos()
 
     if tokens_controle_fluxo:
