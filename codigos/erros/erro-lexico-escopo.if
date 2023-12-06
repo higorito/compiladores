@@ -1,8 +1,0 @@
-main vacuum 
-    num_flu preco => 29.91;
-
-
-    fn soma num_int[num_int a, num_int b<
-        return a + b;
-    >;
->;

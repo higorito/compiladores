@@ -1,25 +1,25 @@
-main vacuum<
+main@
   num_int n -> 10;  -- Defina o valor de n conforme necessário --
 
-  num_int fib(num_int x) <
+  fn fib(num_int x) @
     num_int a -> 0;
     num_int b -> 1;
     num_int i -> 2;
 
-    case[x <= 0]<
+    case[x <= 0]@
       take a;
-    > ordo<
-      loop < i <= x <
+    @ ordo@
+      when[ i <= x ]
         num_int temp -> a + b;
         a -> b;
         b -> temp;
         i -> i + 1;
-      >
+      @
       take b;
-    >
-  >
+    @
+  @
 
   num_int resultado -> fib(n);
   puts<"O numero de Fibonacci eh: ">;
   puts<resultado>;
->
+@

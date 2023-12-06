@@ -1,5 +1,0 @@
-main vacuum <
-    num_flu batata => 2.1;
-    
-    
->
