@@ -359,6 +359,9 @@ class No:
     def adicionar_filho(self, filho):
         self.filhos.append(filho)
 
+
+
+
 def imprimir_arvore(no, nivel=0):
     if no.valor is not None:
         print("  " * nivel + f"-- {no.tipo} ({no.valor})")
@@ -368,50 +371,53 @@ def imprimir_arvore(no, nivel=0):
     for filho in no.filhos:
         imprimir_arvore(filho, nivel + 1)
 
-# Exemplo de uso
-raiz = No("Programa")
+def construir_arvore_simulada():
 
-# Atribuição 1
-atribuicao1 = No("ATRIBUICAO")
-atribuicao1.adicionar_filho(No("TIPO_VAR", "num_int"))
-atribuicao1.adicionar_filho(No("VARIAVEL", "a"))
-atribuicao1.adicionar_filho(No("NUMERO", "20"))
-raiz.adicionar_filho(atribuicao1)
 
-# Atribuição 2
-atribuicao2 = No("ATRIBUICAO")
-atribuicao2.adicionar_filho(No("TIPO_VAR", "num_int"))
-atribuicao2.adicionar_filho(No("VARIAVEL", "b"))
-atribuicao2.adicionar_filho(No("NUMERO", "10"))
-raiz.adicionar_filho(atribuicao2)
+    arvore_sintatica = No("Programa")
 
-# Estrutura condicional
-estrutura_case = No("DESVIO")
-case = No("CASE")
-expressao_case = No("EXPRESSAO_RELACIONAL")
-expressao_case.adicionar_filho(No("VARIAVEL", "a"))
-expressao_case.adicionar_filho(No("OPERADOR_RELACIONAL", "<="))
-expressao_case.adicionar_filho(No("VARIAVEL", "b"))
-case.adicionar_filho(expressao_case)
+    atribuicao_a = No("ATRIBUICAO")
+    atribuicao_a.adicionar_filho(No("TIPO_VAR", "num_int"))
+    atribuicao_a.adicionar_filho(No("VARIAVEL", "a"))
+    atribuicao_a.adicionar_filho(No("NUMERO", "20"))
 
-# Escopo do Case
-escopo_case = No("ESOCAPO_CASE")
+    atribuicao_b = No("ATRIBUICAO")
+    atribuicao_b.adicionar_filho(No("TIPO_VAR", "num_int"))
+    atribuicao_b.adicionar_filho(No("VARIAVEL", "b"))
+    atribuicao_b.adicionar_filho(No("NUMERO", "10"))
 
-# Atribuição dentro do escopo
-atribuicao_case = No("ATRIBUICAO")
-atribuicao_case.adicionar_filho(No("VARIAVEL", "a"))
-expressao_aritmetica = No("EXPRESSAO_ARITMETICA")
-expressao_aritmetica.adicionar_filho(No("VARIAVEL", "a"))
-expressao_aritmetica.adicionar_filho(No("OPERADOR_ARITMETICO", "+"))
-expressao_aritmetica.adicionar_filho(No("NUMERO", "1"))
-atribuicao_case.adicionar_filho(expressao_aritmetica)
+    caso = No("DESVIO_CASE")
+    expressao_relacional = No("EXPRESSAO_RELACIONAL")
+    expressao_relacional.adicionar_filho(No("VARIAVEL", "a"))
+    expressao_relacional.adicionar_filho(No("OPERADOR_RELACIONAL", "<="))
+    expressao_relacional.adicionar_filho(No("VARIAVEL", "b"))
 
-escopo_case.adicionar_filho(atribuicao_case)
-case.adicionar_filho(escopo_case)
+    escopo_caso = No("ESCOPO_CASE")
+    atribuicao_caso = No("ATRIBUICAO")
+    atribuicao_caso.adicionar_filho(No("VARIAVEL", "a"))
+    expressao_aritmetica = No("EXPRESSAO_ARITMETICA")
+    expressao_aritmetica.adicionar_filho(No("VARIAVEL", "a"))
+    expressao_aritmetica.adicionar_filho(No("OPERADOR_ARITMETICO", "+"))
+    expressao_aritmetica.adicionar_filho(No("NUMERO", "1"))
+    atribuicao_caso.adicionar_filho(expressao_aritmetica)
 
-# Adiciona o Case à estrutura condicional
-estrutura_case.adicionar_filho(case)
-raiz.adicionar_filho(estrutura_case)
+    caso.adicionar_filho(expressao_relacional)
+    caso.adicionar_filho(escopo_caso)
+    escopo_caso.adicionar_filho(atribuicao_caso)
 
-# Imprime a árvore
-imprimir_arvore(raiz)
+    arvore_sintatica.adicionar_filho(atribuicao_a)
+    arvore_sintatica.adicionar_filho(atribuicao_b)
+    arvore_sintatica.adicionar_filho(caso)
+
+    return arvore_sintatica
+
+
+def main():
+    
+    arvore_sintatica = construir_arvore_simulada()
+    imprimir_arvore(arvore_sintatica)
+    analise_semantica = AnaliseSemantica()
+    analise_semantica.analisar(arvore_sintatica)
+
+if __name__ == "__main__":
+    main()
