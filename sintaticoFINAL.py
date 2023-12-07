@@ -14,7 +14,7 @@ class Node:
 class AnalisadorSintatico:
     def __init__(self):
         self.tokens = []        #lista de tokens
-        self.posicao = 0        #posição atual na lista de tokens
+        self.posicao = 1       #posição atual na lista de tokens
 
     #função principal que inicia a análise sintática
     def parse(self, tokens):
@@ -26,7 +26,10 @@ class AnalisadorSintatico:
     #chama a função para processar todos os tokens
         arvore_sintatica = self.processar_todos_tokens()
 
-        return arvore_sintatica
+        if not self.erro_encontrado:
+            return arvore_sintatica
+        else:
+            return None  #
 
     def processar_todos_tokens(self):
 
@@ -38,7 +41,6 @@ class AnalisadorSintatico:
         while self.posicao < len(self.tokens):
             token_atual = self.tokens[self.posicao]
 
-            #verifica o tipo do token atual e chama a função correspondente
             if token_atual['tipo'] == 'PALAVRA_RESERVADA':
                 node.add_child(self.palavra_reservada())
             elif token_atual['tipo'] == 'SIM_ESPECIAL':
@@ -62,20 +64,26 @@ class AnalisadorSintatico:
             elif token_atual['tipo'] == 'NUM_FLU':
                 node.add_child(self.num_flu())
             else:
-                #trata outros tipos de tokens conforme necessário
-                self.posicao += 1  #avança para o próximo token
+                # trata outros tipos de tokens conforme necessário
+                self.erro_sintatico(f"Token inesperado: {token_atual['tipo']}, esperado algum tipo específico.")
+                self.posicao += 1  # avança para o próximo token
+
 
         return node
         
 
     #função para verificar se o token atual corresponde ao tipo esperado
-    def match(self, tipo_esperado):
+    def match(self, tipos_esperados):
         if self.posicao < len(self.tokens):
             token_atual = self.tokens[self.posicao]
 
-            if token_atual['tipo'] == tipo_esperado:
+            if token_atual['tipo'] in tipos_esperados:
                 self.posicao += 1
                 return token_atual['lexema']
+            else:
+                self.erro_sintatico(f"Erro de correspondência: esperado {tipos_esperados}, encontrado {token_atual['tipo']}.")
+                return None  # Retorna None em caso de erro
+
        
 
     #   APLICAÇÃO DAS FUNÇÕES
@@ -89,135 +97,146 @@ class AnalisadorSintatico:
 
     #função principal que representa as palavras reservadas
     def palavra_reservada(self):
-        node = Node('PALAVRA_RESERVADA')  # cria um nó para representar a regra <main>
+        tipos_esperados = ['PALAVRA_RESERVADA', 'ATRIBUICAO', 'IDENTIFICADOR', 'NUM_INT', 'NUM_FLU', 'TEXT', 'OP_ARITMETICO', 'OP_RELACIONAL', 'OP_LOGICO', 'SIM_ESPECIAL', 'LISTADEDECLARACAO']
 
-        lexema = self.match('PALAVRA_RESERVADA')
+        lexema = self.match(tipos_esperados)
 
-        #enquanto houver correspondência, adiciona o lexema como filho
-        while lexema:
+        if lexema:
+            node = Node('PALAVRA_RESERVADA')  # cria um nó específico para a palavra reservada
             node.add_child(Node(lexema))
-            lexema = self.match('PALAVRA_RESERVADA')  #avança para o próximo lexema após a correspondência
-
-        return node
+            return node
+        else:
+            return None
     
     #função principal que representa os simbolos especiais
     def sim_especial(self):
         node = Node('SIM_ESPECIAL')
+        tipos_esperados = ['PALAVRA_RESERVADA', 'ATRIBUICAO', 'IDENTIFICADOR', 'NUM_INT', 'NUM_FLU', 'TEXT', 'OP_ARITMETICO', 'OP_RELACIONAL', 'OP_LOGICO', 'SIM_ESPECIAL', 'LISTADEDECLARACAO']
 
-        lexema = self.match('SIM_ESPECIAL')
+        lexema = self.match(tipos_esperados)
 
-        while lexema:
+        if lexema:
             node.add_child(Node(lexema))
-            lexema = self.match('SIM_ESPECIAL')
-
-        return node
+            return node
+        else:
+            return None
 
     #função principal que representa os operadores aritmeticos
     def op_aritmetico(self):
         node = Node('OP_ARITMETICO')
+        tipos_esperados = ['PALAVRA_RESERVADA', 'ATRIBUICAO', 'IDENTIFICADOR', 'NUM_INT', 'NUM_FLU', 'TEXT', 'OP_ARITMETICO', 'OP_RELACIONAL', 'OP_LOGICO', 'SIM_ESPECIAL', 'LISTADEDECLARACAO']
 
-        lexema = self.match('OP_ARITMETICO')
+        lexema = self.match(tipos_esperados)
 
-        while lexema:
+        if lexema:
             node.add_child(Node(lexema))
-            lexema = self.match('OP_ARITMETICO')
+            return node
+        else:
+            return None
 
-        return node
-    
     #função principal que representa os operadores relacionais
     def op_relacional(self):
         node = Node('OP_RELACIONAL')
+        tipos_esperados = ['PALAVRA_RESERVADA', 'ATRIBUICAO', 'IDENTIFICADOR', 'NUM_INT', 'NUM_FLU', 'TEXT', 'OP_ARITMETICO', 'OP_RELACIONAL', 'OP_LOGICO', 'SIM_ESPECIAL', 'LISTADEDECLARACAO']
 
-        lexema = self.match('OP_RELACIONAL')
+        lexema = self.match(tipos_esperados)
 
-        while lexema:
+        if lexema:
             node.add_child(Node(lexema))
-            lexema = self.match('OP_RELACIONAL')
+            return node
+        else:
+            return None
 
-        return node
-    
     #função principal que representa os operadores logicos
     def op_logico(self):
         node = Node('OP_LOGICO')
-        lexema = self.match('OP_LOGICO')
+        tipos_esperados = ['PALAVRA_RESERVADA', 'ATRIBUICAO', 'IDENTIFICADOR', 'NUM_INT', 'NUM_FLU', 'TEXT', 'OP_ARITMETICO', 'OP_RELACIONAL', 'OP_LOGICO', 'SIM_ESPECIAL', 'LISTADEDECLARACAO']
 
-        while lexema:
+        lexema = self.match(tipos_esperados)
+
+        if lexema:
             node.add_child(Node(lexema))
-            lexema = self.match('OP_LOGICO')
-        
-        return node
-    
+            return node
+        else:
+            return None
+
     #função principal que representa os identificadores
     def identificador(self):
         node = Node('IDENTIFICADOR')
+        tipos_esperados = ['PALAVRA_RESERVADA', 'ATRIBUICAO', 'IDENTIFICADOR', 'NUM_INT', 'NUM_FLU', 'TEXT', 'OP_ARITMETICO', 'OP_RELACIONAL', 'OP_LOGICO', 'SIM_ESPECIAL', 'LISTADEDECLARACAO']
 
-        lexema = self.match('IDENTIFICADOR')
+        lexema = self.match(tipos_esperados)
 
-        while lexema:
+        if lexema:
             node.add_child(Node(lexema))
-            lexema = self.match('IDENTIFICADOR')
+            return node
+        else:
+            return None
 
-        return node
-    
     #função principal que representa as atribuições
     def atribuicao(self):
         node = Node('ATRIBUICAO')
+        tipos_esperados = ['PALAVRA_RESERVADA', 'ATRIBUICAO', 'IDENTIFICADOR', 'NUM_INT', 'NUM_FLU', 'TEXT', 'OP_ARITMETICO', 'OP_RELACIONAL', 'OP_LOGICO', 'SIM_ESPECIAL', 'LISTADEDECLARACAO']
 
-        lexema = self.match('ATRIBUICAO')
+        lexema = self.match(tipos_esperados)
 
-        while lexema:
+        if lexema:
             node.add_child(Node(lexema))
-            lexema = self.match('ATRIBUICAO')
+            return node
+        else:
+            return None
 
-        return node
-    
     #função principal que representa as listas de declarações
     def lista_declaracao(self):
         node = Node('LISTADEDECLARACAO')
+        tipos_esperados = ['PALAVRA_RESERVADA', 'ATRIBUICAO', 'IDENTIFICADOR', 'NUM_INT', 'NUM_FLU', 'TEXT', 'OP_ARITMETICO', 'OP_RELACIONAL', 'OP_LOGICO', 'SIM_ESPECIAL', 'LISTADEDECLARACAO']
 
-        lexema = self.match('LISTADEDECLARACAO')
+        lexema = self.match(tipos_esperados)
 
-        while lexema:
+        if lexema:
             node.add_child(Node(lexema))
-            lexema = self.match('LISTADEDECLARACAO')
+            return node
+        else:
+            return None
 
-        return node
-    
     #função principal que representa os text
-    def text (self):
+    def text(self):
         node = Node('TEXT')
+        tipos_esperados = ['PALAVRA_RESERVADA', 'ATRIBUICAO', 'IDENTIFICADOR', 'NUM_INT', 'NUM_FLU', 'TEXT', 'OP_ARITMETICO', 'OP_RELACIONAL', 'OP_LOGICO', 'SIM_ESPECIAL', 'LISTADEDECLARACAO']
 
-        lexema = self.match('TEXT')
+        lexema = self.match(tipos_esperados)
 
-        while lexema:
+        if lexema:
             node.add_child(Node(lexema))
-            lexema = self.match('TEXT')
+            return node
+        else:
+            return None
 
-        return node
-    
     #função principal que representa os numeros inteiros
     def num_int(self):
         node = Node('NUM_INT')
+        tipos_esperados = ['PALAVRA_RESERVADA', 'ATRIBUICAO', 'IDENTIFICADOR', 'NUM_INT', 'NUM_FLU', 'TEXT', 'OP_ARITMETICO', 'OP_RELACIONAL', 'OP_LOGICO', 'SIM_ESPECIAL', 'LISTADEDECLARACAO']
 
-        lexema = self.match('NUM_INT')
+        lexema = self.match(tipos_esperados)
 
-        while lexema:
+        if lexema:
             node.add_child(Node(lexema))
-            lexema = self.match('NUM_INT')
+            return node
+        else:
+            return None
 
-        return node
-    
     #função principal que representa os numeros flutuantes
     def num_flu(self):
         node = Node('NUM_FLU')
+        tipos_esperados = ['PALAVRA_RESERVADA', 'ATRIBUICAO', 'IDENTIFICADOR', 'NUM_INT', 'NUM_FLU', 'TEXT', 'OP_ARITMETICO', 'OP_RELACIONAL', 'OP_LOGICO', 'SIM_ESPECIAL', 'LISTADEDECLARACAO']
 
-        lexema = self.match('NUM_FLU')
+        lexema = self.match(tipos_esperados)
 
-        while lexema:
+        if lexema:
             node.add_child(Node(lexema))
-            lexema = self.match('NUM_FLU')
-
-        return node
+            return node
+        else:
+            return None
     
     #função principal que imprime a árvore sintática
     def imprimir_arvore(self, node, nivel=0, tipo_esperado=None, lado=None):
@@ -246,7 +265,8 @@ class AnalisadorSintatico:
 
     def erro_sintatico(self, tipo_esperado):
         self.erro(tipo_esperado)
-        print(f"Erro sintático: {tipo_esperado} esperado na posição {self.posicao}.")
+        if tipo_esperado is not None:
+            print(f"Erro sintático: {tipo_esperado} esperado na posição {self.posicao}.")
         exit()  #saia do programa se houver erro sintático
 
     
@@ -256,12 +276,12 @@ if __name__ == "__main__":
     analisador_lexico = AnalisadorLexico("teste.txt")
     tokens_controle_fluxo = analisador_lexico.get_tabela_simbolos()
 
-    # if tokens_controle_fluxo:
-    #     print("Análise léxica bem-sucedida! Tokens gerados:")
-    #     analisador_lexico.imprimir_tokens()
-    # else:
-    #     print("Erro na análise léxica.")
-    #     exit()  #saia do programa se houver erro léxico
+    if tokens_controle_fluxo:
+         print("Análise léxica bem-sucedida! Tokens gerados:")
+         analisador_lexico.imprimir_tokens()
+    else:
+         print("Erro na análise léxica.")
+         exit()  #saia do programa se houver erro léxico
 
     # Análise sintática
     analisador_sintatico = AnalisadorSintatico()
