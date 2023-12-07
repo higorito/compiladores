@@ -3,4 +3,5 @@ main
   num_int ; -> 20;
   num_int -> 10;
 
+  num_flu -> 2.9;
 
