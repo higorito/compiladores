@@ -82,7 +82,7 @@ class AnalisadorSintatico:
                 return token_atual['lexema']
             else:
                 self.erro_sintatico(f"Erro de correspondência: esperado {tipos_esperados}, encontrado {token_atual['tipo']}.")
-                return None  # Retorna None em caso de erro
+                return None  #retorna None em caso de erro
 
        
 
@@ -102,7 +102,7 @@ class AnalisadorSintatico:
         lexema = self.match(tipos_esperados)
 
         if lexema:
-            node = Node('PALAVRA_RESERVADA')  # cria um nó específico para a palavra reservada
+            node = Node('PALAVRA_RESERVADA')  #cria um nó específico para a palavra reservada
             node.add_child(Node(lexema))
             return node
         else:
