@@ -1,0 +1,92 @@
+// Árvore Sintática
+digraph {
+	<__main__.Node object at 0x000001CE7B15FFD0> [label="Árvore:"]
+	<__main__.Node object at 0x000001CE7B17C290> [label=main]
+	<__main__.Node object at 0x000001CE7B15FFD0> -> <__main__.Node object at 0x000001CE7B17C290>
+	<__main__.Node object at 0x000001CE7B17C310> [label="@"]
+	<__main__.Node object at 0x000001CE7B15FFD0> -> <__main__.Node object at 0x000001CE7B17C310>
+	<__main__.Node object at 0x000001CE7B17C410> [label=num_int]
+	<__main__.Node object at 0x000001CE7B15FFD0> -> <__main__.Node object at 0x000001CE7B17C410>
+	<__main__.Node object at 0x000001CE7B17C450> [label="->"]
+	<__main__.Node object at 0x000001CE7B15FFD0> -> <__main__.Node object at 0x000001CE7B17C450>
+	<__main__.Node object at 0x000001CE7B17C390> [label=20]
+	<__main__.Node object at 0x000001CE7B15FFD0> -> <__main__.Node object at 0x000001CE7B17C390>
+	<__main__.Node object at 0x000001CE7B17C4D0> [label=";"]
+	<__main__.Node object at 0x000001CE7B15FFD0> -> <__main__.Node object at 0x000001CE7B17C4D0>
+	<__main__.Node object at 0x000001CE7B17C550> [label=num_int]
+	<__main__.Node object at 0x000001CE7B15FFD0> -> <__main__.Node object at 0x000001CE7B17C550>
+	<__main__.Node object at 0x000001CE7B17C590> [label="->"]
+	<__main__.Node object at 0x000001CE7B15FFD0> -> <__main__.Node object at 0x000001CE7B17C590>
+	<__main__.Node object at 0x000001CE7B17C510> [label=10]
+	<__main__.Node object at 0x000001CE7B15FFD0> -> <__main__.Node object at 0x000001CE7B17C510>
+	<__main__.Node object at 0x000001CE7B17C490> [label=";"]
+	<__main__.Node object at 0x000001CE7B15FFD0> -> <__main__.Node object at 0x000001CE7B17C490>
+	<__main__.Node object at 0x000001CE7B17C690> [label=case]
+	<__main__.Node object at 0x000001CE7B15FFD0> -> <__main__.Node object at 0x000001CE7B17C690>
+	<__main__.Node object at 0x000001CE7B17C6D0> [label="["]
+	<__main__.Node object at 0x000001CE7B15FFD0> -> <__main__.Node object at 0x000001CE7B17C6D0>
+	<__main__.Node object at 0x000001CE7B17C790> [label=num1]
+	<__main__.Node object at 0x000001CE7B15FFD0> -> <__main__.Node object at 0x000001CE7B17C790>
+	<__main__.Node object at 0x000001CE7B17C810> [label="<="]
+	<__main__.Node object at 0x000001CE7B15FFD0> -> <__main__.Node object at 0x000001CE7B17C810>
+	<__main__.Node object at 0x000001CE7B17C890> [label=num2]
+	<__main__.Node object at 0x000001CE7B15FFD0> -> <__main__.Node object at 0x000001CE7B17C890>
+	<__main__.Node object at 0x000001CE7B17C8D0> [label="]"]
+	<__main__.Node object at 0x000001CE7B15FFD0> -> <__main__.Node object at 0x000001CE7B17C8D0>
+	<__main__.Node object at 0x000001CE7B17C950> [label="@"]
+	<__main__.Node object at 0x000001CE7B15FFD0> -> <__main__.Node object at 0x000001CE7B17C950>
+	<__main__.Node object at 0x000001CE7B17CA10> [label=num1]
+	<__main__.Node object at 0x000001CE7B15FFD0> -> <__main__.Node object at 0x000001CE7B17CA10>
+	<__main__.Node object at 0x000001CE7B17CA90> [label="->"]
+	<__main__.Node object at 0x000001CE7B15FFD0> -> <__main__.Node object at 0x000001CE7B17CA90>
+	<__main__.Node object at 0x000001CE7B17CB10> [label=num1]
+	<__main__.Node object at 0x000001CE7B15FFD0> -> <__main__.Node object at 0x000001CE7B17CB10>
+	<__main__.Node object at 0x000001CE7B17CB50> [label="+"]
+	<__main__.Node object at 0x000001CE7B15FFD0> -> <__main__.Node object at 0x000001CE7B17CB50>
+	<__main__.Node object at 0x000001CE7B17CBD0> [label=1]
+	<__main__.Node object at 0x000001CE7B15FFD0> -> <__main__.Node object at 0x000001CE7B17CBD0>
+	<__main__.Node object at 0x000001CE7B17CC50> [label=";"]
+	<__main__.Node object at 0x000001CE7B15FFD0> -> <__main__.Node object at 0x000001CE7B17CC50>
+	<__main__.Node object at 0x000001CE7B17CD10> [label="@"]
+	<__main__.Node object at 0x000001CE7B15FFD0> -> <__main__.Node object at 0x000001CE7B17CD10>
+	<__main__.Node object at 0x000001CE7B17CDD0> [label=ordo]
+	<__main__.Node object at 0x000001CE7B15FFD0> -> <__main__.Node object at 0x000001CE7B17CDD0>
+	<__main__.Node object at 0x000001CE7B17CE10> [label="@"]
+	<__main__.Node object at 0x000001CE7B15FFD0> -> <__main__.Node object at 0x000001CE7B17CE10>
+	<__main__.Node object at 0x000001CE7B17CE90> [label="@"]
+	<__main__.Node object at 0x000001CE7B15FFD0> -> <__main__.Node object at 0x000001CE7B17CE90>
+	<__main__.Node object at 0x000001CE7B17CF50> [label=when]
+	<__main__.Node object at 0x000001CE7B15FFD0> -> <__main__.Node object at 0x000001CE7B17CF50>
+	<__main__.Node object at 0x000001CE7B17CF90> [label="["]
+	<__main__.Node object at 0x000001CE7B15FFD0> -> <__main__.Node object at 0x000001CE7B17CF90>
+	<__main__.Node object at 0x000001CE7B17D050> [label=num1]
+	<__main__.Node object at 0x000001CE7B15FFD0> -> <__main__.Node object at 0x000001CE7B17D050>
+	<__main__.Node object at 0x000001CE7B17D0D0> [label="=="]
+	<__main__.Node object at 0x000001CE7B15FFD0> -> <__main__.Node object at 0x000001CE7B17D0D0>
+	<__main__.Node object at 0x000001CE7B17D110> [label=30]
+	<__main__.Node object at 0x000001CE7B15FFD0> -> <__main__.Node object at 0x000001CE7B17D110>
+	<__main__.Node object at 0x000001CE7B17D190> [label="]"]
+	<__main__.Node object at 0x000001CE7B15FFD0> -> <__main__.Node object at 0x000001CE7B17D190>
+	<__main__.Node object at 0x000001CE7B17D210> [label="@"]
+	<__main__.Node object at 0x000001CE7B15FFD0> -> <__main__.Node object at 0x000001CE7B17D210>
+	<__main__.Node object at 0x000001CE7B17D2D0> [label=num1]
+	<__main__.Node object at 0x000001CE7B15FFD0> -> <__main__.Node object at 0x000001CE7B17D2D0>
+	<__main__.Node object at 0x000001CE7B17D350> [label="->"]
+	<__main__.Node object at 0x000001CE7B15FFD0> -> <__main__.Node object at 0x000001CE7B17D350>
+	<__main__.Node object at 0x000001CE7B17D3D0> [label=num1]
+	<__main__.Node object at 0x000001CE7B15FFD0> -> <__main__.Node object at 0x000001CE7B17D3D0>
+	<__main__.Node object at 0x000001CE7B17D410> [label="+"]
+	<__main__.Node object at 0x000001CE7B15FFD0> -> <__main__.Node object at 0x000001CE7B17D410>
+	<__main__.Node object at 0x000001CE7B17D490> [label=1]
+	<__main__.Node object at 0x000001CE7B15FFD0> -> <__main__.Node object at 0x000001CE7B17D490>
+	<__main__.Node object at 0x000001CE7B17D510> [label=";"]
+	<__main__.Node object at 0x000001CE7B15FFD0> -> <__main__.Node object at 0x000001CE7B17D510>
+	<__main__.Node object at 0x000001CE7B17D590> [label="@"]
+	<__main__.Node object at 0x000001CE7B15FFD0> -> <__main__.Node object at 0x000001CE7B17D590>
+	<__main__.Node object at 0x000001CE7B17D610> [label="@"]
+	<__main__.Node object at 0x000001CE7B15FFD0> -> <__main__.Node object at 0x000001CE7B17D610>
+	<__main__.Node object at 0x000001CE7B17D690> [label=""]
+	<__main__.Node object at 0x000001CE7B15FFD0> -> <__main__.Node object at 0x000001CE7B17D690>
+	<__main__.Node object at 0x000001CE7B17DA10> [label=""]
+	<__main__.Node object at 0x000001CE7B15FFD0> -> <__main__.Node object at 0x000001CE7B17DA10>
+}

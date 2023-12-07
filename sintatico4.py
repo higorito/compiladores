@@ -65,6 +65,8 @@ class AnalisadorSintatico:
     #função principal que inicia a análise sintática
     def parse(self, tokens):
         self.tokens = tokens
+        self.erro_encontrado = False
+        self.erro_tipo = None
         return self.main()
 
     #função para verificar se o token atual corresponde ao tipo esperado
@@ -72,33 +74,68 @@ class AnalisadorSintatico:
         if self.posicao < len(self.tokens):
             token_atual = self.tokens[self.posicao]
 
-            #mensagem de debug para exibir o tipo esperado e o token atual
-            print(f"debug: tipo_esperado = {tipo_esperado}, token_atual = {token_atual['lexema']}")
-
-            #verifica se o tipo do token corresponde ao tipo esperado
             if token_atual['tipo'] == tipo_esperado:
                 self.posicao += 1
-                return token_atual['lexema']  #alteração aqui, retornando apenas o lexema
-        return None
+                return token_atual['lexema']
+        #     else:
+        #         # Adicionando mensagem de erro
+        #         self.erro_encontrado = True
+        #         self.erro_tipo = f"Erro sintático: esperado {tipo_esperado}, encontrado {token_atual['tipo']} ({token_atual['lexema']})"
+        #         return None
+        # return None
+
+    #imprimindo a cabeça da árvore
+    def main1(self):
+        node1 = Node('INICIO DA ÁRVORE')
+        return node1
+
+
+
 
     #função principal que representa a regra gramatical <main>
     def main(self):
-        node = Node('main')   #cria um nó para representar a regra <main>
+        root = self.main1()  # Obtém o nó da função main1 como a raiz da árvore
+        node = Node('PALAVRA_RESERVADA')  # cria um nó para representar a regra <main>
 
-        #tenta fazer correspondência com PALAVRA_RESERVADA, SIM_ESPECIAL, IDENTIFICADOR, NUM_INT, NUM_FLU, ou TEXT
-        lexema = self.match('PALAVRA_RESERVADA') or self.match('SIM_ESPECIAL') or self.match('IDENTIFICADOR') or self.match('NUM_INT') or self.match('NUM_FLU') or self.match('TEXT') or self.match('ATRIBUICAO') or self.match('OP_ARITMETICO') or self.match('OP_RELACIONAL') or self.match('OP_LOGICO')
+        lexema = self.match('PALAVRA_RESERVADA')
 
-        #enquanto houver correspondência, adiciona o lexema como filho
+        # enquanto houver correspondência, adiciona o lexema como filho
         while lexema:
             node.add_child(Node(lexema))
-            lexema = self.match('PALAVRA_RESERVADA') or self.match('SIM_ESPECIAL') or self.match('IDENTIFICADOR') or self.match('NUM_INT') or self.match('NUM_FLU') or self.match('TEXT') or self.match('ATRIBUICAO') or self.match('OP_ARITMETICO') or self.match('OP_RELACIONAL') or self.match('OP_LOGICO')
+            lexema = self.match('PALAVRA_RESERVADA')  # Avança para o próximo lexema após a correspondência
 
-        #tenta corresponder às declarações (ListaDeDeclaracao)
+        # tenta corresponder às declarações (ListaDeDeclaracao)
         declaracoes = self.lista_declaracao()
         if declaracoes:
             node.add_child(declaracoes)
 
-        #tenta corresponder ao escopo
+        # tenta corresponder ao escopo
+        escopo = self.escopo()
+        if escopo:
+            node.add_child(escopo)
+
+        # tenta corresponder à função sim_especial
+        especial = self.sim_especial()
+        if especial:
+            node.add_child(especial)
+    
+        return node
+         
+        
+    def sim_especial(self):
+        node = Node('                   SIM_ESPECIAL:')  # Cria um nó para representar o símbolo especial
+        lexema = self.match('SIM_ESPECIAL')
+
+        while lexema:
+            # Adiciona o lexema como filho do nó 'SIM_ESPECIAL'
+            node.add_child(Node(lexema))
+            lexema = self.match('SIM_ESPECIAL')
+
+        # Adiciona as declarações e o escopo como filhos do nó 'SIM_ESPECIAL'
+        declaracoes = self.lista_declaracao()
+        if declaracoes:
+            node.add_child(declaracoes)
+
         escopo = self.escopo()
         if escopo:
             node.add_child(escopo)
@@ -107,7 +144,7 @@ class AnalisadorSintatico:
 
     #função para corresponder à regra gramatical <ListaDeDeclaracao>
     def lista_declaracao(self):
-        node = Node('ListaDeDeclaracao')
+        node = Node('')
         child = self.declaracao()
 
         #enquanto houver correspondência com '|', continua adicionando declarações
@@ -137,11 +174,14 @@ class AnalisadorSintatico:
         if self.posicao < len(self.tokens):
             token_atual = self.tokens[self.posicao]
 
-            #mensagem de debug para exibir o tipo esperado e o token atual
-            #print(f"debug: tipo_esperado = PALAVRA_RESERVADA, token_atual = {token_atual['lexema']}")
+            # lista de tipos permitidos
+            tipos_permitidos = ['PALAVRA_RESERVADA', 'SIM_ESPECIAL']
 
-            #verifica se o token atual é uma palavra reservada 'text'
-            if token_atual['tipo'] == 'PALAVRA_RESERVADA' and token_atual['lexema'] == 'text':
+            # mensagem de debug para exibir o tipo esperado e o token atual
+            print(f"debug: tipo_esperado = {tipos_permitidos}, token_atual = {token_atual['lexema']}")
+
+            # verifica se o tipo do token atual está na lista de tipos permitidos
+            if token_atual['tipo'] in tipos_permitidos:
                 self.posicao += 1
                 return True
 
@@ -149,26 +189,27 @@ class AnalisadorSintatico:
 
     #função para corresponder à regra gramatical <Variavel>
     def variavel(self):
-        return self.match('Identificador')
+        return self.match('IDENTIFICADOR')
 
     #função para corresponder à regra gramatical <Escopo>
     def escopo(self):
-        node = Node('escopo')
+        node = Node('Escopo')
 
-        #tenta corresponder à regra <escopo>
-        if self.match('PALAVRA_RESERVADA'):
+        # tenta corresponder à regra <escopo>
+        if self.match('PALAVRA_RESERVADA') or self.match('SIM_ESPECIAL'):
             child = self.lista_declaracao()
 
-            #se houver correspondência com a lista de declarações, tenta corresponder ao escopo novamente
+            # se houver correspondência com a lista de declarações, tenta corresponder ao escopo novamente
             if child:
                 node.add_child(child)
                 child = self.escopo()
                 if child:
                     node.add_child(child)
                     return node
-        #se não houver correspondência com <escopo>, verifica se há correspondência com <ListaDeDeclaracao>
+        # se não houver correspondência com <escopo>, verifica se há correspondência com <ListaDeDeclaracao>
         elif self.lista_declaracao():
-            return Node('ListaDeDeclaracao')
+            return Node('')
+
         return None
 
     #função para corresponder à regra gramatical <Comando>
@@ -341,65 +382,42 @@ class AnalisadorSintatico:
         return self.match('Numero')
 
     #função para imprimir a árvore sintática de forma recursiva
-    def imprimir_arvore(self, node, nivel=0):
+    def imprimir_arvore(self, node, nivel=0, tipo_esperado=None):
         if node:
             if not node.children:
-                #é um nó folha, exibe apenas o lexema (se houver)
+                # é um nó folha, exibe o tipo esperado e o lexema (se houver)
                 lexema = node.label if node.label else ""
-                print('  ' * nivel + f'{lexema}')
+                tipo = f"{tipo_esperado}: {lexema}" if tipo_esperado else lexema
+                print('  ' * nivel + f'{tipo}')
             else:
-                #é um nó interno, exibe o rótulo da regra gramatical
+                # é um nó interno, exibe o rótulo da regra gramatical
                 print('  ' * nivel + f'{node.label}')
 
                 for child in node.children:
-                    self.imprimir_arvore(child, nivel + 1)
+                    # passa o tipo esperado do pai para os filhos
+                    self.imprimir_arvore(child, nivel + 1, tipo_esperado=node.label if tipo_esperado is None else tipo_esperado)
 
-
-
-# Tokens de exemplo
-# tokens_exemplo = [
-#     {'tipo': 'PALAVRA_RESERVADA', 'lexema': 'main'},
-#     {'tipo': 'PALAVRA_RESERVADA', 'lexema': 'vacuum'},
-#     {'tipo': '<', 'lexema': '<'},
-#     {'tipo': 'Identificador', 'lexema': 'x'},
-#     {'tipo': '>', 'lexema': '>'},
-# ]
-
-# tokens_exemplo = [
-#     "PALAVRA_RESERVADA, main, Linha 1",
-#     "PALAVRA_RESERVADA, vacuum, Linha 1",
-#     "SIM_ESPECIAL, <, Linha 1",
-# ]
-
-# analisador_sintatico = AnalisadorSintatico(tokens_exemplo)
-# arvore_sintatica = analisador_sintatico.parse()
-
-# if arvore_sintatica:
-#     print("Análise sintática bem-sucedida! Árvore sintática gerada:")
-#     analisador_sintatico.imprimir_arvore(arvore_sintatica)
-# else:
-#     print("Erro na análise sintática.")
 
 
 
 if __name__ == "__main__":
-    analisador_lexico = AnalisadorLexico("cod.txt")
+    analisador_lexico = AnalisadorLexico("teste.txt")
     tokens_controle_fluxo = analisador_lexico.get_tabela_simbolos()
 
     if tokens_controle_fluxo:
         print("Análise léxica bem-sucedida! Tokens gerados:")
-        # analisador_lexico.imprimir_tokens()
+        analisador_lexico.imprimir_tokens()
     else:
         print("Erro na análise léxica.")
         exit()  #saia do programa se houver erro léxico
 
-    #Análise sintática
+    # Análise sintática
     analisador_sintatico = AnalisadorSintatico()
     arvore_sintatica_controle_fluxo = analisador_sintatico.parse(tokens_controle_fluxo)
-    
-    if arvore_sintatica_controle_fluxo:
+
+    if not analisador_sintatico.erro_encontrado:
         print("\nAnálise sintática bem-sucedida! Árvore sintática gerada:")
         analisador_sintatico.imprimir_arvore(arvore_sintatica_controle_fluxo)
     else:
-        print("\nErro na análise sintática.")
-
+        print(f"\n{analisador_sintatico.erro_tipo}")
+        print("Erro na análise sintática.")

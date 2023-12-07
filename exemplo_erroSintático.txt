@@ -1,0 +1,19 @@
+main@
+
+  num_int -> 20;
+  num_int -> 10;
+
+  case[num1 <= num2]
+  @
+    num1 -> num1 + 1;
+  @
+    ordo@
+      
+    @
+
+  when[ num1 == 30 ]
+  @
+    num1 -> num1 + 1;
+  @
+
+@
