@@ -14,7 +14,9 @@ class Node:
 class AnalisadorSintatico:
     def __init__(self):
         self.tokens = []        #lista de tokens
-        self.posicao = 1       #posição atual na lista de tokens
+        self.posicao = 0       #posição atual na lista de tokens
+        self.erro_encontrado = False
+        self.erro_tipo = None
 
     #função principal que inicia a análise sintática
     def parse(self, tokens):
@@ -23,13 +25,21 @@ class AnalisadorSintatico:
         self.erro_encontrado = False
         self.erro_tipo = None
 
-    #chama a função para processar todos os tokens
+        #debug: Mostra os tokens antes de iniciar o processamento
+        print("Tokens antes da análise sintática:")
+        for token in self.tokens:
+            print(token)
+
+        #continua com o processamento dos tokens
         arvore_sintatica = self.processar_todos_tokens()
+
+        #verifica palavras reservadas após o processamento
+        self.verificar_palavras_reservadas()
 
         if not self.erro_encontrado:
             return arvore_sintatica
         else:
-            return None  #
+            return None
 
     def processar_todos_tokens(self):
 
@@ -64,9 +74,9 @@ class AnalisadorSintatico:
             elif token_atual['tipo'] == 'NUM_FLU':
                 node.add_child(self.num_flu())
             else:
-                # trata outros tipos de tokens conforme necessário
+                #trata outros tipos de tokens conforme necessário
                 self.erro_sintatico(f"Token inesperado: {token_atual['tipo']}, esperado algum tipo específico.")
-                self.posicao += 1  # avança para o próximo token
+                self.posicao += 1  #avança para o próximo token
 
 
         return node
@@ -258,20 +268,133 @@ class AnalisadorSintatico:
                         self.imprimir_arvore(child, nivel + 1, tipo_esperado=node.label if tipo_esperado is None else tipo_esperado, lado='' * nivel * 4 + '|--')
 
 
-############### AQUI IREI ADICIONAR OS MÉTODOS PARA IDENTIFICAR ERROS SINTÁTICOS ######################
+############### IMPLEMENTAÇÃO DE ERROS SINTÁTICOS ######################
+
     def erro(self, tipo):
         self.erro_encontrado = True
         self.erro_tipo = tipo
 
-    def erro_sintatico(self, tipo_esperado):
-        self.erro(tipo_esperado)
-        if tipo_esperado is not None:
-            print(f"Erro sintático: {tipo_esperado} esperado na posição {self.posicao}.")
+    #verifica erro sintático, caso tenha um tipo de token esperado e outro encontrado, ele informa.
+    def erro_sintatico(self, mensagem):
+        self.erro_encontrado = True
+        self.erro_tipo = "Erro Sintático"
+        print(f"{self.erro_tipo}: {mensagem} na posição {self.posicao}.")
         exit()  #saia do programa se houver erro sintático
 
+    #verifica o erro de uma palavra reservada ser atribuida a um NUM_INT, por exemplo main ==1, main >= 2... etc
+    def verificar_palavras_reservadas(self):
+        for i in range(len(self.tokens) - 2):  
+            token_atual = self.tokens[i]
+            proximo_token = self.tokens[i + 1]
+            token_depois_do_proximo = self.tokens[i + 2]
+
+            if (
+                token_atual['tipo'] == 'PALAVRA_RESERVADA'
+                and proximo_token['tipo'] == 'OP_RELACIONAL'
+                and token_depois_do_proximo['tipo'] == 'NUM_INT'
+            ):
+                mensagem_erro = f"A palavra reservada '{token_atual['lexema']}' não pode ser relacionada com um NUM_INT"
+                self.erro_sintatico(mensagem_erro)
+                return True
+        return False
     
+    #verifica o erro de operações entre NUM_INT e NUM_FLU, por exemplo 1 + 1.0, 2 * 2.0... etc
+    def verificar_operacoes_num_intANDnum_flu(self):
+        for i in range(len(self.tokens) - 2):  
+            token_atual = self.tokens[i]
+            proximo_token = self.tokens[i + 1]
+            token_depois_do_proximo = self.tokens[i + 2]
+
+            if (
+                token_atual['tipo'] == 'NUM_INT'
+                and proximo_token['tipo'] == 'OP_ARITMETICO'
+                and token_depois_do_proximo['tipo'] == 'NUM_FLU'
+            ):
+                mensagem_erro = f"Não é possível realizar operações entre um NUM_INT e um NUM_FLU"
+                self.erro_sintatico(mensagem_erro)
+                return True
+        return False
     
+    #verifica o erro de atribuição em palavra reservada, por exemplo main -> 1, main -> 2... etc
+    def verificar_atribuicao_em_palavra_reservada(self):
+        for i in range(len(self.tokens) - 2):  
+            token_atual = self.tokens[i]
+            proximo_token = self.tokens[i + 1]
+            token_depois_do_proximo = self.tokens[i + 2]
+
+            if (
+                token_atual['tipo'] == 'PALAVRA_RESERVADA'
+                and proximo_token['tipo'] == 'ATRIBUICAO'
+                and token_depois_do_proximo['tipo'] == 'NUM_INT'
+            ):
+                mensagem_erro = f"Não é possível atribuir um valor a uma palavra reservada"
+                self.erro_sintatico(mensagem_erro)
+                return True
+        return False
     
+    #verifica o erro de atribuição em identificador, por exemplo papai noel -> 20, papai noel -> 30... etc
+    def verificar_atribuicao_em_identificador(self):
+        for i in range(len(self.tokens) - 2):  
+            token_atual = self.tokens[i]
+            proximo_token = self.tokens[i + 1]
+            token_depois_do_proximo = self.tokens[i + 2]
+
+            if (
+                token_atual['tipo'] == 'IDENTIFICADOR'
+                and proximo_token['tipo'] == 'ATRIBUICAO'
+                and token_depois_do_proximo['tipo'] == 'NUM_INT'
+            ):
+                mensagem_erro = f"Não é possível atribuir um valor a um identificador"
+                self.erro_sintatico(mensagem_erro)
+                return True
+        return False
+    
+    #verificar o erro de não fechar [] ou @ corretamente, por exemplo main[1,2,3  ... @ teste  etc
+    def verificar_fechamento_parenteses(self):
+        stack = []  #uma pilha para rastrear os símbolos de abertura
+        contador_at = 0
+
+        for i, token in enumerate(self.tokens):
+            if token['tipo'] == 'SIM_ESPECIAL':
+                lexema = token['lexema']
+
+                if lexema == '[':
+                    stack.append(('[', i))  #empilha o símbolo de abertura '[' e sua posição
+                elif lexema == ']':
+                    if not stack:
+                        mensagem_erro = f"Símbolo de fechamento ']' na posição {i} não tem correspondência de abertura"
+                        self.erro_sintatico(mensagem_erro)
+                        return True
+
+                    simbolo_abertura, posicao_abertura = stack.pop()
+
+                    #verifica se os tipos de símbolos correspondem
+                    if simbolo_abertura != '[':
+                        mensagem_erro = f"Símbolo de fechamento ']' na posição {i} não corresponde ao tipo de abertura '{simbolo_abertura}' na posição {posicao_abertura}"
+                        self.erro_sintatico(mensagem_erro)
+                        return True
+                elif lexema == '@':
+                    contador_at += 1
+
+        #verifica se há símbolos de abertura não fechados
+        for simbolo_abertura, posicao_abertura in stack:
+            mensagem_erro = f"Símbolo de abertura '{simbolo_abertura}' na posição {posicao_abertura} não tem correspondência de fechamento."
+            self.erro_sintatico(mensagem_erro)
+            return True
+
+        #verifica se o número de '@' é par
+        if contador_at % 2 != 0:
+            mensagem_erro = "O @ não possui fechamento"
+            self.erro_sintatico(mensagem_erro)
+            return True
+
+        return False
+    
+
+############### FECHAMENTO ERROS SINTÁTICOS ######################
+
+
+
 if __name__ == "__main__":
     analisador_lexico = AnalisadorLexico("teste.txt")
     tokens_controle_fluxo = analisador_lexico.get_tabela_simbolos()
@@ -283,13 +406,36 @@ if __name__ == "__main__":
          print("Erro na análise léxica.")
          exit()  #saia do programa se houver erro léxico
 
-    # Análise sintática
+    #análise sintática
     analisador_sintatico = AnalisadorSintatico()
     arvore_sintatica_controle_fluxo = analisador_sintatico.parse(tokens_controle_fluxo)
 
-    if not analisador_sintatico.erro_encontrado:
-        print("\nAnálise sintática bem-sucedida! Árvore sintática gerada:")
-        analisador_sintatico.imprimir_arvore(arvore_sintatica_controle_fluxo)
-    else:
-        print(f"\n{analisador_sintatico.erro_tipo}")
+
+    #exibição dos erros sintáticos:
+
+    if analisador_sintatico.verificar_fechamento_parenteses():
+        print(f"\n{analisador_sintatico.erro_tipo}: {analisador_sintatico.erro_tipo}")
         print("Erro na análise sintática.")
+    else:
+        if analisador_sintatico.verificar_operacoes_num_intANDnum_flu():
+            print(f"\n{analisador_sintatico.erro_tipo}: {analisador_sintatico.erro_tipo}")
+            print("Erro na análise sintática.")
+        else:
+            
+            if analisador_sintatico.verificar_atribuicao_em_palavra_reservada():
+                print(f"\n{analisador_sintatico.erro_tipo}: {analisador_sintatico.erro_tipo}")
+                print("Erro na análise sintática.")
+            else:
+                
+                if analisador_sintatico.verificar_atribuicao_em_identificador():
+                    print(f"\n{analisador_sintatico.erro_tipo}: {analisador_sintatico.erro_tipo}")
+                    print("Erro na análise sintática.")
+                else:
+                    arvore_sintatica_controle_fluxo = analisador_sintatico.parse(tokens_controle_fluxo)
+
+                    if not analisador_sintatico.erro_encontrado:
+                        print("\nAnálise sintática bem-sucedida! Árvore sintática gerada:")
+                        analisador_sintatico.imprimir_arvore(arvore_sintatica_controle_fluxo)
+                    else:
+                        print(f"\n{analisador_sintatico.erro_tipo}: {analisador_sintatico.erro_tipo}")
+                        print("Erro na análise sintática.")
