@@ -390,6 +390,48 @@ class AnalisadorSintatico:
 
         return False
     
+    #verificar o erro de não finalizar o arquivo com ;, por exemplo main , testando [1,2,3] .... etc
+    def verificar_fechamento_ponto_virgula(self):
+        ultimo_token = self.tokens[-1] if self.tokens else None
+
+        #verifica se o último token existe e se termina com ponto e vírgula
+        if ultimo_token and ultimo_token['tipo'] != 'SIM_ESPECIAL' and ultimo_token['lexema'] != ';':
+            mensagem_erro = "O arquivo não termina com ';'"
+            self.erro_sintatico(mensagem_erro)
+            return True
+
+        return False
+    
+    #verificar o erro de não finalizar NUM_FLU e NUM_INT com ;, por exemplo 1.5, 2.5, 3.5 .... etc
+    def verificar_fechamento_ponto_virgula_num_intANDnum_flu(self):
+        for i in range(len(self.tokens) - 1):
+            token_atual = self.tokens[i]
+            proximo_token = self.tokens[i + 1]
+
+            if (
+                token_atual['tipo'] in ['NUM_INT', 'NUM_FLU']
+                and proximo_token['tipo'] != 'SIM_ESPECIAL'
+                and proximo_token['lexema'] != ';'
+            ):
+                mensagem_erro = f"O {token_atual['tipo']} '{token_atual['lexema']}' não está finalizado com ';'"
+                self.erro_sintatico(mensagem_erro)
+                return True
+
+        #verifica o último token no caso de ser um NUM_INT ou NUM_FLU
+        ultimo_token = self.tokens[-1] if self.tokens else None
+        if (
+            ultimo_token
+            and ultimo_token['tipo'] in ['NUM_INT', 'NUM_FLU']
+            and not ultimo_token['lexema'].endswith(';')
+        ):
+            mensagem_erro = f"O {ultimo_token['tipo']} '{ultimo_token['lexema']}' não está finalizado com ';'"
+            self.erro_sintatico(mensagem_erro)
+            return True
+
+        return False
+
+
+    
 
 ############### FECHAMENTO ERROS SINTÁTICOS ######################
 
@@ -413,29 +455,38 @@ if __name__ == "__main__":
 
     #exibição dos erros sintáticos:
 
-    if analisador_sintatico.verificar_fechamento_parenteses():
+    if analisador_sintatico.verificar_fechamento_ponto_virgula_num_intANDnum_flu():
         print(f"\n{analisador_sintatico.erro_tipo}: {analisador_sintatico.erro_tipo}")
-        print("Erro na análise sintática.")
+        print("Erro na análise sintática.") 
     else:
-        if analisador_sintatico.verificar_operacoes_num_intANDnum_flu():
+        if analisador_sintatico.verificar_fechamento_ponto_virgula():
             print(f"\n{analisador_sintatico.erro_tipo}: {analisador_sintatico.erro_tipo}")
             print("Erro na análise sintática.")
         else:
-            
-            if analisador_sintatico.verificar_atribuicao_em_palavra_reservada():
+
+            if analisador_sintatico.verificar_fechamento_parenteses():
                 print(f"\n{analisador_sintatico.erro_tipo}: {analisador_sintatico.erro_tipo}")
                 print("Erro na análise sintática.")
             else:
-                
-                if analisador_sintatico.verificar_atribuicao_em_identificador():
+                if analisador_sintatico.verificar_operacoes_num_intANDnum_flu():
                     print(f"\n{analisador_sintatico.erro_tipo}: {analisador_sintatico.erro_tipo}")
                     print("Erro na análise sintática.")
                 else:
-                    arvore_sintatica_controle_fluxo = analisador_sintatico.parse(tokens_controle_fluxo)
-
-                    if not analisador_sintatico.erro_encontrado:
-                        print("\nAnálise sintática bem-sucedida! Árvore sintática gerada:")
-                        analisador_sintatico.imprimir_arvore(arvore_sintatica_controle_fluxo)
-                    else:
+                    
+                    if analisador_sintatico.verificar_atribuicao_em_palavra_reservada():
                         print(f"\n{analisador_sintatico.erro_tipo}: {analisador_sintatico.erro_tipo}")
                         print("Erro na análise sintática.")
+                    else:
+                        
+                        if analisador_sintatico.verificar_atribuicao_em_identificador():
+                            print(f"\n{analisador_sintatico.erro_tipo}: {analisador_sintatico.erro_tipo}")
+                            print("Erro na análise sintática.")
+                        else:
+                            arvore_sintatica_controle_fluxo = analisador_sintatico.parse(tokens_controle_fluxo)
+
+                            if not analisador_sintatico.erro_encontrado:
+                                print("\nAnálise sintática bem-sucedida! Árvore sintática gerada:")
+                                analisador_sintatico.imprimir_arvore(arvore_sintatica_controle_fluxo)
+                            else:
+                                print(f"\n{analisador_sintatico.erro_tipo}: {analisador_sintatico.erro_tipo}")
+                                print("Erro na análise sintática.")
