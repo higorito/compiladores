@@ -25,10 +25,10 @@ class AnalisadorSintatico:
         self.erro_encontrado = False
         self.erro_tipo = None
 
-        #debug: Mostra os tokens antes de iniciar o processamento
-        print("Tokens antes da análise sintática:")
-        for token in self.tokens:
-            print(token)
+        # #debug: Mostra os tokens antes de iniciar o processamento
+        # print("Tokens antes da análise sintática:")
+        # for token in self.tokens:
+        #     print(token)
 
         #continua com o processamento dos tokens
         arvore_sintatica = self.processar_todos_tokens()
@@ -429,8 +429,160 @@ class AnalisadorSintatico:
             return True
 
         return False
+        
 
+    #verifica o erro de uma palavra reservada ter uma operação a um NUM_INT, por exemplo main +1, main * 2... etc
+    def verificar_operacoes_palavrareservadaANDnum_int(self):
+        for i in range(len(self.tokens) - 2):  
+            token_atual = self.tokens[i]
+            proximo_token = self.tokens[i + 1]
+            token_depois_do_proximo = self.tokens[i + 2]
 
+            if (
+                token_atual['tipo'] == 'PALAVRA_RESERVADA'
+                and proximo_token['tipo'] == 'OP_ARITMETICO'
+                and token_depois_do_proximo['tipo'] == 'NUM_INT'
+            ):
+                mensagem_erro = f"A palavra reservada '{token_atual['lexema']}' não pode ter uma operação com um NUM_INT"
+                self.erro_sintatico(mensagem_erro)
+                return True
+        return False
+    
+    #verifica o erro de uma palavra reservada ter uma operação a um NUM_INT, por exemplo main +1.3, main * 2.3 ... etc
+    def verificar_operacoes_palavrareservadaANDnum_flu(self):
+        for i in range(len(self.tokens) - 2):  
+            token_atual = self.tokens[i]
+            proximo_token = self.tokens[i + 1]
+            token_depois_do_proximo = self.tokens[i + 2]
+
+            if (
+                token_atual['tipo'] == 'PALAVRA_RESERVADA'
+                and proximo_token['tipo'] == 'OP_ARITMETICO'
+                and token_depois_do_proximo['tipo'] == 'NUM_FLU'
+            ):
+                mensagem_erro = f"A palavra reservada '{token_atual['lexema']}' não pode ter uma operação com um NUM_FLU"
+                self.erro_sintatico(mensagem_erro)
+                return True
+        return False
+    
+    #verifica o erro de um identificador ter uma operação a um NUM_INT, por exemplo PAPAI NOEL +1, PAPEL NOEL * 2 ... etc
+    def verificar_operacoes_identificadorANDnum_int(self):
+        for i in range(len(self.tokens) - 2):  
+            token_atual = self.tokens[i]
+            proximo_token = self.tokens[i + 1]
+            token_depois_do_proximo = self.tokens[i + 2]
+
+            if (
+                token_atual['tipo'] == 'IDENTIFICADOR'
+                and proximo_token['tipo'] == 'OP_ARITMETICO'
+                and token_depois_do_proximo['tipo'] == 'NUM_INT'
+            ):
+                mensagem_erro = f"O identificador '{token_atual['lexema']}' não pode ter uma operação com um NUM_INT"
+                self.erro_sintatico(mensagem_erro)
+                return True
+        return False
+    
+    #verifica o erro de um identificador ter uma operação a um NUM_FLU, por exemplo PAPEL NOEL +1.4, PAPAI NOEL * 2.3 ... etc
+    def verificar_operacoes_identificadorANDnum_flu(self):
+        for i in range(len(self.tokens) - 2):  
+            token_atual = self.tokens[i]
+            proximo_token = self.tokens[i + 1]
+            token_depois_do_proximo = self.tokens[i + 2]
+
+            if (
+                token_atual['tipo'] == 'IDENTIFICADOR'
+                and proximo_token['tipo'] == 'OP_ARITMETICO'
+                and token_depois_do_proximo['tipo'] == 'NUM_FLU'
+            ):
+                mensagem_erro = f"O identificador '{token_atual['lexema']}' não pode ter uma operação com um NUM_FLU"
+                self.erro_sintatico(mensagem_erro)
+                return True
+        return False
+    
+    #verifica o erro de um identificador ter uma operação a um NUM_FLU, por exemplo PAPEL NOEL + main, PAPAI NOEL * main ... etc
+    def verificar_operacoes_identificadorANDpalavra_reservada(self):
+        for i in range(len(self.tokens) - 2):  
+            token_atual = self.tokens[i]
+            proximo_token = self.tokens[i + 1]
+            token_depois_do_proximo = self.tokens[i + 2]
+
+            if (
+                token_atual['tipo'] == ['IDENTIFICADOR','PALAVRA_RESERVADA']
+                and proximo_token['tipo'] == 'OP_ARITMETICO'
+                and token_depois_do_proximo['tipo'] == ['IDENTIFICADOR','PALAVRA_RESERVADA']
+            ):
+                mensagem_erro = f"O identificador '{token_atual['lexema']}' não pode ter uma operação com uma PALAVRA_RESERVADA"
+                self.erro_sintatico(mensagem_erro)
+                return True
+        return False
+
+    #verifica o erro de um identificador ter uma operação a um identificador, por exemplo PAPEL NOEL + teste, PAPAI NOEL * teste ... etc
+    def verificar_operacoes_identificadorANDidentificador(self):
+        for i in range(len(self.tokens) - 2):  
+            token_atual = self.tokens[i]
+            proximo_token = self.tokens[i + 1]
+            token_depois_do_proximo = self.tokens[i + 2]
+
+            if (
+                token_atual['tipo'] == 'IDENTIFICADOR'
+                and proximo_token['tipo'] == 'OP_ARITMETICO'
+                and token_depois_do_proximo['tipo'] == 'IDENTIFICADOR'
+            ):
+                mensagem_erro = f"O identificador '{token_atual['lexema']}' não pode ter uma operação com um IDENTIFICADOR"
+                self.erro_sintatico(mensagem_erro)
+                return True
+        return False
+    
+    #verifica o erro de uma palavra_reservada ter uma operação a uma palavra_reservada, por exemplo main + main, main * main ... etc
+    def verificar_operacoes_palavra_reservadaANDpalavra_reservada(self):
+        for i in range(len(self.tokens) - 2):  
+            token_atual = self.tokens[i]
+            proximo_token = self.tokens[i + 1]
+            token_depois_do_proximo = self.tokens[i + 2]
+
+            if (
+                token_atual['tipo'] == 'PALAVRA_RESERVADA'
+                and proximo_token['tipo'] == 'OP_ARITMETICO'
+                and token_depois_do_proximo['tipo'] == 'PALAVRA_RESERVADA'
+            ):
+                mensagem_erro = f"A palavra reservada '{token_atual['lexema']}' não pode ter uma operação com uma PALAVRA_RESERVADA"
+                self.erro_sintatico(mensagem_erro)
+                return True
+        return False
+        
+    #verifica o erro de uma palavra_reservada ter uma operação relacional a um identificador, por exemplo main == teste, num_int ==teste ... etc
+    def verificar_operacaoRELACIONAL_palavra_reservadaANDidentificador(self):
+        for i in range(len(self.tokens) - 2):  
+            token_atual = self.tokens[i]
+            proximo_token = self.tokens[i + 1]
+            token_depois_do_proximo = self.tokens[i + 2]
+
+            if (
+                token_atual['tipo'] == 'PALAVRA_RESERVADA'
+                and proximo_token['tipo'] == 'OP_RELACIONAL'
+                and token_depois_do_proximo['tipo'] == 'IDENTIFICADOR'
+            ):
+                mensagem_erro = f"A palavra reservada '{token_atual['lexema']}' não pode ter uma operação relacional com um IDENTIFICADOR"
+                self.erro_sintatico(mensagem_erro)
+                return True
+        return False
+    #verifica o erro de uma palavra_reservada ter uma atribuição a um identificador, por exemplo main -> a, main -> teste ... etc
+    def verificar_atribuicao_palavra_reservadaANDidentificador(self):
+        for i in range(len(self.tokens) - 2):  
+            token_atual = self.tokens[i]
+            proximo_token = self.tokens[i + 1]
+            token_depois_do_proximo = self.tokens[i + 2]
+
+            if (
+                token_atual['tipo'] == 'PALAVRA_RESERVADA'
+                and proximo_token['tipo'] == 'ATRIBUICAO'
+                and token_depois_do_proximo['tipo'] == 'IDENTIFICADOR'
+            ):
+                mensagem_erro = f"A palavra reservada '{token_atual['lexema']}' não pode ter uma atribuição com um IDENTIFICADOR"
+                self.erro_sintatico(mensagem_erro)
+                return True
+        return False
+    
     
 
 ############### FECHAMENTO ERROS SINTÁTICOS ######################
@@ -453,40 +605,71 @@ if __name__ == "__main__":
     arvore_sintatica_controle_fluxo = analisador_sintatico.parse(tokens_controle_fluxo)
 
 
-    #exibição dos erros sintáticos:
+   #exibição dos erros sintáticos:
+    if analisador_sintatico.verificar_palavras_reservadas():
+        print(f"\n{analisador_sintatico.erro_tipo}: {analisador_sintatico.erro_tipo}")
+        print("Erro na análise sintática.")
+
+    if analisador_sintatico.verificar_operacoes_num_intANDnum_flu():
+        print(f"\n{analisador_sintatico.erro_tipo}: {analisador_sintatico.erro_tipo}")
+        print("Erro na análise sintática.")
+
+    if analisador_sintatico.verificar_atribuicao_em_palavra_reservada():
+        print(f"\n{analisador_sintatico.erro_tipo}: {analisador_sintatico.erro_tipo}")
+        print("Erro na análise sintática.")
+
+    if analisador_sintatico.verificar_atribuicao_em_identificador():
+        print(f"\n{analisador_sintatico.erro_tipo}: {analisador_sintatico.erro_tipo}")
+        print("Erro na análise sintática.")
+
+    if analisador_sintatico.verificar_fechamento_parenteses():
+        print(f"\n{analisador_sintatico.erro_tipo}: {analisador_sintatico.erro_tipo}")
+        print("Erro na análise sintática.")
+
+    if analisador_sintatico.verificar_fechamento_ponto_virgula():
+        print(f"\n{analisador_sintatico.erro_tipo}: {analisador_sintatico.erro_tipo}")
+        print("Erro na análise sintática.")
 
     if analisador_sintatico.verificar_fechamento_ponto_virgula_num_intANDnum_flu():
         print(f"\n{analisador_sintatico.erro_tipo}: {analisador_sintatico.erro_tipo}")
-        print("Erro na análise sintática.") 
+        print("Erro na análise sintática.")
+
+    if analisador_sintatico.verificar_operacoes_palavrareservadaANDnum_int():
+        print(f"\n{analisador_sintatico.erro_tipo}: {analisador_sintatico.erro_tipo}")
+        print("Erro na análise sintática.")
+
+    if analisador_sintatico.verificar_operacoes_palavrareservadaANDnum_flu():
+        print(f"\n{analisador_sintatico.erro_tipo}: {analisador_sintatico.erro_tipo}")
+        print("Erro na análise sintática.")
+
+    if analisador_sintatico.verificar_operacoes_identificadorANDnum_int():
+        print(f"\n{analisador_sintatico.erro_tipo}: {analisador_sintatico.erro_tipo}")
+        print("Erro na análise sintática.")
+
+    if analisador_sintatico.verificar_operacoes_identificadorANDnum_flu():
+        print(f"\n{analisador_sintatico.erro_tipo}: {analisador_sintatico.erro_tipo}")
+        print("Erro na análise sintática.")
+
+    if analisador_sintatico.verificar_operacoes_identificadorANDpalavra_reservada():
+        print(f"\n{analisador_sintatico.erro_tipo}: {analisador_sintatico.erro_tipo}")
+        print("Erro na análise sintática.")
+
+    if analisador_sintatico.verificar_operacoes_palavra_reservadaANDpalavra_reservada():
+        print(f"\n{analisador_sintatico.erro_tipo}: {analisador_sintatico.erro_tipo}")
+        print("Erro na análise sintática.")
+
+    if analisador_sintatico.verificar_operacoes_identificadorANDidentificador():
+        print(f"\n{analisador_sintatico.erro_tipo}: {analisador_sintatico.erro_tipo}")
+        print("Erro na análise sintática.")
+
+    if analisador_sintatico.verificar_operacaoRELACIONAL_palavra_reservadaANDidentificador():
+        print(f"\n{analisador_sintatico.erro_tipo}: {analisador_sintatico.erro_tipo}")
+        print("Erro na análise sintática.")
+        
+    if analisador_sintatico.verificar_atribuicao_palavra_reservadaANDidentificador():
+        print(f"\n{analisador_sintatico.erro_tipo}: {analisador_sintatico.erro_tipo}")
+        print("Erro na análise sintática.")
     else:
-        if analisador_sintatico.verificar_fechamento_ponto_virgula():
-            print(f"\n{analisador_sintatico.erro_tipo}: {analisador_sintatico.erro_tipo}")
-            print("Erro na análise sintática.")
-        else:
-
-            if analisador_sintatico.verificar_fechamento_parenteses():
-                print(f"\n{analisador_sintatico.erro_tipo}: {analisador_sintatico.erro_tipo}")
-                print("Erro na análise sintática.")
-            else:
-                if analisador_sintatico.verificar_operacoes_num_intANDnum_flu():
-                    print(f"\n{analisador_sintatico.erro_tipo}: {analisador_sintatico.erro_tipo}")
-                    print("Erro na análise sintática.")
-                else:
-                    
-                    if analisador_sintatico.verificar_atribuicao_em_palavra_reservada():
-                        print(f"\n{analisador_sintatico.erro_tipo}: {analisador_sintatico.erro_tipo}")
-                        print("Erro na análise sintática.")
-                    else:
-                        
-                        if analisador_sintatico.verificar_atribuicao_em_identificador():
-                            print(f"\n{analisador_sintatico.erro_tipo}: {analisador_sintatico.erro_tipo}")
-                            print("Erro na análise sintática.")
-                        else:
-                            arvore_sintatica_controle_fluxo = analisador_sintatico.parse(tokens_controle_fluxo)
-
-                            if not analisador_sintatico.erro_encontrado:
-                                print("\nAnálise sintática bem-sucedida! Árvore sintática gerada:")
-                                analisador_sintatico.imprimir_arvore(arvore_sintatica_controle_fluxo)
-                            else:
-                                print(f"\n{analisador_sintatico.erro_tipo}: {analisador_sintatico.erro_tipo}")
-                                print("Erro na análise sintática.")
+        if not analisador_sintatico.erro_encontrado:
+            print("\nAnálise sintática bem-sucedida! Árvore sintática gerada:")
+            analisador_sintatico.imprimir_arvore(arvore_sintatica_controle_fluxo)
