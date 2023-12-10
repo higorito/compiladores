@@ -4,4 +4,7 @@ main@
     num_int quantidade -> 10;
 
     text nomeproduto -> "cafe";
+
+    bool varBool -> ok;
+
 @

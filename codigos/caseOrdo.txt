@@ -1,0 +1,12 @@
+main@
+    num_int num -> 10;
+
+    case[num <= 5 ]@
+        puts("texto aqui");
+    @
+        ordo@
+            puts("entrou no else");
+        @
+
+
+@

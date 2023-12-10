@@ -1,51 +1,3 @@
-# GRAMÁTICA PARA ANALISADOR LÉXICO
-
-# Início
-# main | ListaDeDeclaracao
-
-# Lista de Declaração
-# ListaDeDeclaracao | Declaracao | ε
-
-# Declaração
-# TipoVar Variavel ;
-
-# TipoVar
-# text | numero 
-
-# Variável 
-# ID
-
-# Comentários
-# -- .* \n
-
-# Strings
-# ".*"
-
-# Números
-# num_int | num_flu
-
-# Palavras Reservadas
-# main | vacuum | num_int | num_flu | text
-
-# Operadores Aritméticos
-# + | - | * | / | // | **
-
-# Operadores Relacionais
-# == | != | >= | <= | >> | <<
-
-# Operadores Lógicos
-# && | || | !
-
-# Símbolos Especiais
-# < | > | ; | [ | ]
-
-# Atribuição
-# ID =>
-
-# Ignorar espaços em branco
-# \s
-
-
 import os
 class AnalisadorLexico:
     def __init__(self, path: str):
@@ -57,7 +9,7 @@ class AnalisadorLexico:
         self.__estado = 0
 
         self.__tokens_aritmeticos = ['+', '-', '*', '/', '//', '**']
-        self.__tokens_relacionais = ['==', '!=', '>=', '<=', '>>', '<<']
+        self.__tokens_relacionais = ['==', '!=', '>=', '<=', '>', '<']
         self.__tokens_logicos = ['&&', '||', '!']
         self.__caracteres_especiais = ['@', ';', '[', ']']
 
@@ -77,7 +29,7 @@ class AnalisadorLexico:
 
     
     def get_tabela_simbolos(self):
-        tabela_simbolos = []
+        self.__tabela_simbolos = []
         while self.__cab_leitura < len(self._conteudo):
             char = self._conteudo[self.__cab_leitura]
 
@@ -167,38 +119,20 @@ class AnalisadorLexico:
 
     
 
-    # def erros_lexicos_escopo(self):
-    #     pilha_escopos = []
-    #     dentro_token = False
-       
+    def erros_lexicos_escopo(self):
+        pilha_at = []
 
-    #     for i, char in enumerate(self._conteudo):
-    #         if char in {'<', '>', '[', ']'}:
-    #             if not dentro_token:
-    #                 if char == '<' or char == '>':
-    #                     pilha_escopos.append(char)
-    #                 elif char == '[':
-    #                     pilha_escopos.append('[')
-    #                 else:  # char == ']'
-    #                     if not pilha_escopos or pilha_escopos[-1] != '[':
-    #                         print(f"Erro léxico: Escopo ']' sem o correspondente '[' na linha {self.__linha}")
-    #                     else:
-    #                         pilha_escopos.pop()
-    #         elif char == '=':
-    #             # Verificando se o próximo caractere forma um token relacional
-    #             if i + 1 < len(self._conteudo) and not self._conteudo[i + 1].isalnum():
-    #                 possivel_token = char + self._conteudo[i + 1]
-    #                 if possivel_token in self.__tokens_relacionais:
-    #                     dentro_token = True
-    #                 elif possivel_token == '=>':
-    #                     dentro_token = False
-    #                     # Considerando '=>' como um único token relacional
-    #                     pilha_escopos.append(possivel_token)
-    #         elif char.isalnum() or char == '_':
-    #             dentro_token = False
+        for char in self._conteudo:
+            if char == '@':
+                pilha_at.append('@')
 
-    #     for escopo in pilha_escopos:
-    #         print(f"Erro léxico: Escopo '{escopo}' aberto na linha {self.__linha} não foi fechado")
+        if len(pilha_at) % 2 != 0:
+            print(f"Erro lexico: Falta fehcar '@' na linha {self.__linha}")
+        else:
+            for i in range(0, len(pilha_at), 2):
+                if i + 1 >= len(pilha_at) or pilha_at[i + 1] != '@':
+                    print(f"Erro léxico: Token '@' na linha {self.__linha}não foi fechado")
+
     
     def verificar_tokens_validos(self):
         tokens_validos = set([ #pode adicionar outros tokens ou modificar
@@ -206,7 +140,7 @@ class AnalisadorLexico:
             'OP_LOGICO', 'SIM_ESPECIAL',
             'IDENTIFICADOR', 'NUM_INT',
             'NUM_FLU', 'TEXT', 'PALAVRA_RESERVADA',
-            'ATRIBUICAO',  'LISTADEDECLARACAO'
+            'ATRIBUICAO',  'LISTADEDECLARACAO', 'BOOL'
         ])  
 
         for token in self.__tabela_simbolos:
@@ -236,7 +170,7 @@ class AnalisadorLexico:
 
     def main(self):
         self.tabela_simbolos = self.get_tabela_simbolos()
-        # self.erros_lexicos_escopo()
+        self.erros_lexicos_escopo()
         self.verificar_tokens_validos()
         self.encontrar_identificadores_duplicados()
 
@@ -245,5 +179,5 @@ class AnalisadorLexico:
 
 if __name__ == "__main__":
     # analisador = AnalisadorLexico("erros/erro-lexico-acento.if")
-    analisador = AnalisadorLexico("teste.txt")
+    analisador = AnalisadorLexico("codigos/teste.txt")
     analisador.main()

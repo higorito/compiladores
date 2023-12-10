@@ -1,0 +1,11 @@
+main@
+
+    num_int i -> 0;
+
+    when[ i<10 ]@
+        puts(i);
+
+        i -> i+1;
+    @
+
+@
