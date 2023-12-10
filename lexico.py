@@ -11,7 +11,7 @@ class AnalisadorLexico:
         self.__tokens_aritmeticos = ['+', '-', '*', '/', '//', '**']
         self.__tokens_relacionais = ['==', '!=', '>=', '<=', '>', '<']
         self.__tokens_logicos = ['&&', '||', '!']
-        self.__caracteres_especiais = ['@', ';', '[', ']']
+        self.__caracteres_especiais = ['@', ';', '[', ']', ',']
 
         self.__palavras_reservadas = ['main', 'num_int', 'num_flu', 'text', 'case', 'to', 'when', 'textin', 'textout', 'puts', 'take', 'bool', 'ordo']
 
@@ -179,5 +179,5 @@ class AnalisadorLexico:
 
 if __name__ == "__main__":
     # analisador = AnalisadorLexico("erros/erro-lexico-acento.if")
-    analisador = AnalisadorLexico("codigos/teste.txt")
+    analisador = AnalisadorLexico("teste.txt")
     analisador.main()
