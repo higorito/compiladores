@@ -1,4 +1,3 @@
-import os
 class AnalisadorLexico:
     def __init__(self, path: str):
         self.__tabela_simbolos = []
@@ -15,7 +14,6 @@ class AnalisadorLexico:
 
         self.__palavras_reservadas = ['main', 'num_int', 'num_flu', 'text', 'case', 'to', 'when', 'textin', 'textout', 'puts', 'take', 'bool', 'ordo']
 
-
         self.__isComentario = '--'
         self.__isAtribuicao =  '->'
         self.__isString = '"'
@@ -27,7 +25,6 @@ class AnalisadorLexico:
         arquivo.close()
 
 
-    
     def get_tabela_simbolos(self):
         self.__tabela_simbolos = []
         while self.__cab_leitura < len(self._conteudo):
@@ -98,8 +95,6 @@ class AnalisadorLexico:
 
                 if self.__lexema in self.__tokens_aritmeticos:
                     self.adicionar_token('OP_ARITMETICO', self.__lexema)
-                # elif self.__lexema in self.__tokens_relacionais:
-                #     self.adicionar_token('OP_RELACIONAL', self.__lexema)
                 elif self.__lexema in self.__tokens_logicos:
                     self.adicionar_token('OP_LOGICO', self.__lexema)
                 elif self.__lexema in self.__caracteres_especiais:
