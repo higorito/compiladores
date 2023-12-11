@@ -1,5 +1,6 @@
 class AnalisadorLexico:
     def __init__(self, path: str):
+        self.tokens = []
         self.__tabela_simbolos = []
         self.__cab_leitura = 0
         self.__linha = 1
@@ -8,11 +9,12 @@ class AnalisadorLexico:
         self.__estado = 0
 
         self.__tokens_aritmeticos = ['+', '-', '*', '/', '//', '**']
-        self.__tokens_relacionais = ['==', '!=', '>=', '<=', '>', '<']
+        self.__tokens_relacionais = ['==', '!=', '>=', '<=', '>>', '<<']
         self.__tokens_logicos = ['&&', '||', '!']
         self.__caracteres_especiais = ['@', ';', '[', ']', ',']
 
-        self.__palavras_reservadas = ['main', 'num_int', 'num_flu', 'text', 'case', 'to', 'when', 'textin', 'textout', 'puts', 'take', 'bool', 'ordo']
+        self.__palavras_reservadas = ['main', 'num_int', 'num_flu', 'text', 'case', 'to', 'when', 'textin', 'textout', 'puts', 'take', 'bool', 'ordo', 'fn']
+
 
         self.__isComentario = '--'
         self.__isAtribuicao =  '->'
@@ -25,8 +27,9 @@ class AnalisadorLexico:
         arquivo.close()
 
 
+    
     def get_tabela_simbolos(self):
-        self.__tabela_simbolos = []
+        tabela_simbolos = []
         while self.__cab_leitura < len(self._conteudo):
             char = self._conteudo[self.__cab_leitura]
 
@@ -95,6 +98,8 @@ class AnalisadorLexico:
 
                 if self.__lexema in self.__tokens_aritmeticos:
                     self.adicionar_token('OP_ARITMETICO', self.__lexema)
+                # elif self.__lexema in self.__tokens_relacionais:
+                #     self.adicionar_token('OP_RELACIONAL', self.__lexema)
                 elif self.__lexema in self.__tokens_logicos:
                     self.adicionar_token('OP_LOGICO', self.__lexema)
                 elif self.__lexema in self.__caracteres_especiais:
@@ -107,26 +112,17 @@ class AnalisadorLexico:
         self.__tabela_simbolos.append(token)
 
 
-
+    def preencher_tokens(self):
+        for token in self.__tabela_simbolos:
+            elemento = []
+            elemento.append(token["tipo"])
+            elemento.append(token["lexema"])
+            elemento.append(token["linha"])
+            self.tokens.append(elemento)
+        
     def imprimir_tokens(self):
         for token in self.__tabela_simbolos:
             print(f'{token["tipo"]}, {token["lexema"]}, Linha: {token["linha"]}')
-
-    
-
-    def erros_lexicos_escopo(self):
-        pilha_at = []
-
-        for char in self._conteudo:
-            if char == '@':
-                pilha_at.append('@')
-
-        if len(pilha_at) % 2 != 0:
-            print(f"Erro lexico: Falta fehcar '@' na linha {self.__linha}")
-        else:
-            for i in range(0, len(pilha_at), 2):
-                if i + 1 >= len(pilha_at) or pilha_at[i + 1] != '@':
-                    print(f"Erro léxico: Token '@' na linha {self.__linha}não foi fechado")
 
     
     def verificar_tokens_validos(self):
@@ -135,7 +131,7 @@ class AnalisadorLexico:
             'OP_LOGICO', 'SIM_ESPECIAL',
             'IDENTIFICADOR', 'NUM_INT',
             'NUM_FLU', 'TEXT', 'PALAVRA_RESERVADA',
-            'ATRIBUICAO',  'LISTADEDECLARACAO', 'BOOL'
+            'ATRIBUICAO',  'LISTADEDECLARACAO'
         ])  
 
         for token in self.__tabela_simbolos:
@@ -165,14 +161,11 @@ class AnalisadorLexico:
 
     def main(self):
         self.tabela_simbolos = self.get_tabela_simbolos()
-        self.erros_lexicos_escopo()
         self.verificar_tokens_validos()
-        self.encontrar_identificadores_duplicados()
-
-        
         self.imprimir_tokens()
+        self.preencher_tokens()
 
 if __name__ == "__main__":
     # analisador = AnalisadorLexico("erros/erro-lexico-acento.if")
-    analisador = AnalisadorLexico("teste.txt")
+    analisador = AnalisadorLexico("exemplo1.txt")
     analisador.main()

@@ -1,0 +1,13 @@
+main @
+    fn teste[num_int a, num_int b] @
+        num_int x -> 3;
+        take x;
+    @
+    num_int x -> 1;
+    num_int y -> 8;
+    to [num_int i-> 0, i << 10, i +1]@
+        puts[y];
+    @
+    textin[ x ];
+    puts[x];
+@

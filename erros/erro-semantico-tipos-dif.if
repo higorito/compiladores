@@ -1,0 +1,10 @@
+main@
+    num_flu preco -> 2.9;
+
+    num_int quantidade -> 10;
+
+    num_int aux -> 0;
+
+    aux -> preco + quantidade;
+
+@

@@ -1,0 +1,14 @@
+main@
+    num_flu preco -> 2.9;
+
+    num_int quantidade -> 10;
+
+    text nomeproduto -> "cafe";
+
+    num_int aux;
+
+    aux -> preco + quantidade;
+
+
+
+@
