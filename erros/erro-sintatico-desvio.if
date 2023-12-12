@@ -1,0 +1,17 @@
+main@
+    case[a]@
+        puts [ok];
+    @
+@
+
+
+
+//editar para funcionar:
+
+main@
+    case[a == 10]@
+        puts [ok];
+    ordo@
+        puts [notok];
+    @
+@

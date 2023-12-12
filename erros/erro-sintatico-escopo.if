@@ -2,7 +2,7 @@ main@
 
     fn somar[ num_int a, num_int b  ]
 
-        take a + b;
+        take a + b; 
 
     @
 

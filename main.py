@@ -3,7 +3,7 @@ from auxx import arvore
 from semantico import analisador_semantico
 
 if __name__ == "__main__":
-    AL = AnalisadorLexico("teste.txt")
+    AL = AnalisadorLexico("./erros/erro-sintatico-main.if")
     AL.main()
     tokens = AL.tokens
     arvoreSintatica = arvore(tokens)
