@@ -157,7 +157,7 @@ class AnalisadorLexico:
                     
     def verificar_aspas(self, lexema, linha):
         if not (lexema.startswith('"') and lexema.endswith('"')):
-            print(f"Erro lexico: String '{lexema}' na linha {linha} com aspas faltando ou no lugar errado")
+            print(f"Erro lexico: text '{lexema}' na linha {linha} com aspas faltando ou no lugar errado")
 
     def main(self):
         self.tabela_simbolos = self.get_tabela_simbolos()

@@ -1,7 +1,7 @@
 main@
-  num_int n -> 10;  -- Defina o valor de n conforme necessário --
+  num_int n -> 10;  --defina o valor de n conforme necessário--
 
-  fn fib(num_int x) @
+  fn fib [num_int x] @
     num_int a -> 0;
     num_int b -> 1;
     num_int i -> 2;
@@ -9,7 +9,7 @@ main@
     case[x <= 0]@
       take a;
     @ ordo@
-      when[ i <= x ]
+      when[ i <= x ]@
         num_int temp -> a + b;
         a -> b;
         b -> temp;
@@ -19,7 +19,11 @@ main@
     @
   @
 
-  num_int resultado -> fib(n);
-  puts<"O numero de Fibonacci eh: ">;
-  puts<resultado>;
+  num_int resultado -> fib[n];
+  puts["O numero de Fibonacci eh: "];
+  puts[resultado];
 @
+
+
+
+
