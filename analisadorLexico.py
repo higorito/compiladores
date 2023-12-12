@@ -161,7 +161,7 @@ class AnalisadorLexico:
 
     def main(self):
         self.tabela_simbolos = self.get_tabela_simbolos()
-        self.verificar_tokens_validos()
+        self.verificar_tokens_validos() 
         self.imprimir_tokens()
         self.preencher_tokens()
 

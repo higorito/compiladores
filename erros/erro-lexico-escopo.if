@@ -1,8 +1,0 @@
-main@
-    num_flu preco => 29.91;
-
-
-    fn soma[num_int a, num_int b@
-        take a + b;
-    @
-@

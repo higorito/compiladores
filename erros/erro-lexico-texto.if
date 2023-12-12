@@ -1,4 +1,4 @@
 main@
 
-    text stringaux => "testando;
+    text stringaux -> "testando;
 @;

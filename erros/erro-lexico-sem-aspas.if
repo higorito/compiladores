@@ -1,0 +1,5 @@
+main @
+    textin[ x ];
+    puts[x];
+    text texto1 -> Texto exemplo";
+@

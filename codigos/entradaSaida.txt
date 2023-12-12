@@ -1,0 +1,4 @@
+main @
+    textin[ x ]; --Entrada--
+    puts[x]; --Saida--
+@
