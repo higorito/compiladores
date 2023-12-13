@@ -1,35 +1,3 @@
-#<inicio> ::= main @ <programa> @
-#<programa> ::= <declaracao>| <comando> | ε
-#<declaracao> ::= <tipoVar> IDENTIFICADOR; <programa> | <declaracao2>
-#<declaracao2> ::= <tipoVar> <atribuicao>
-#<tipoVar> ::= num_int | num_flu | text
-#<atribuicao> ::= IDENTIFICADOR -> <conteudo> ; <programa>
-#<conteudo> ::= <valor> | texto | <expAritmetica> | <retornoFuncao>
-#<valor> ::= IDENTIFICADOR | numero inteiro | numero float
-#<comando> ::= <entrada>|<saida>|<desvio>|<atribuicao>|<laco>|<funcao>|<retorno>
-#<entrada> ::= textin [ IDENTIFICADOR ]; <programa>
-#<saida> :: = puts '[' <conteudo> ']'; <programa>
-#<expAritmetica> ::= <valor> <operadorA> <expAritmetica2> ;| ε 
-#<expAritmetica2> ::= <valor> | <valor> <operadorA> <expAritmetica2> | <valor> <operadorA> ( <expAritmetica2> )
-#<operadorA> ::= + | - | / | * | //
-#<funcao> ::= fn IDENTIFICADOR [ <argumento> ] @ <programa> @ <programa>
-#<retorno> ::= take <conteudo> ;
-#<simboloRelacional> ::= << | >> | >= | <= | == | != | ok | notok
-#<termoRelacional> ::= <conteudo> <simboloRelacional> <termoRelacional2>
-#<termoRelacional2> ::= <conteudo> | <conteudo> <termoLogico> <termoRelacional>
-#<termoLogico> ::= && | '||'
-#<desvio> ::= case[<termoRelacional>]@ <programa> @ <programa> | case[<termoRelacional>]@ <programa> @ <desvio2> <programa>
-#<desvio2> ::= ordo @ <programa> @
-#<laco> ::= <for> | <while>
-#<for> ::= to [ num_int IDENTIFICADOR -> numero inteiro, IDENTIFICADOR <simboloRelacional> numero, <incrementa>]@ <programa> @ <programa>
-#<incrementa> ::= <IDENTIFICADOR> <operadorA> <valor> 
-#<while> ::= when [ <termoRelacional> ] @ <programa> @ <programa>
-#<argumento> ::= <tipoVar> IDENTIFICADOR <argumento2>
-#<argumento2> ::= , <argumento> | ε
-#<retornoFuncao> ::= IDENTIFICADOR [ <argumento3> ]
-#<argumento3> ::= <conteudo> | <conteudo> , <argumento3>
-
-
 def inicio(tokens):
     #cria um nó chamado "inicio"
     elemento = No("inicio")

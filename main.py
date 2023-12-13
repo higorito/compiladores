@@ -1,5 +1,5 @@
 from analisadorLexico import AnalisadorLexico
-from auxx import arvore
+from analisadorSintatico import arvore
 from semantico import analisador_semantico
 
 if __name__ == "__main__":
