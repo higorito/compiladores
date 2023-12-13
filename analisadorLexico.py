@@ -29,83 +29,108 @@ class AnalisadorLexico:
 
     
     def get_tabela_simbolos(self):
+        #Inicializa a tabela de símbolos vazia
         tabela_simbolos = []
+
+        #Loop enquanto não atingir o final do conteúdo
         while self.__cab_leitura < len(self._conteudo):
+            #Obtém o caractere atual
             char = self._conteudo[self.__cab_leitura]
 
+            #Verifica se está dentro de um comentário de linha
             if self.__isComentario and self._conteudo[self.__cab_leitura:self.__cab_leitura + 2] == '--':
+                #Ignora todo o conteúdo até o final da linha
                 while self.__cab_leitura < len(self._conteudo) and self._conteudo[self.__cab_leitura] != '\n':
                     self.__cab_leitura += 1
+                #Incrementa a linha, caso ainda haja conteúdo
                 if self.__cab_leitura < len(self._conteudo):
                     self.__cab_leitura += 1
                     self.__linha += 1
+            #Verifica operadores relacionais
             elif self._conteudo[self.__cab_leitura:self.__cab_leitura + 2] in self.__tokens_relacionais:
                 self.adicionar_token('OP_RELACIONAL', self._conteudo[self.__cab_leitura:self.__cab_leitura + 2])
                 self.__cab_leitura += 2
+            #Verifica o operador de atribuição
             elif self._conteudo[self.__cab_leitura:self.__cab_leitura + 2] in ['->']:
                 self.adicionar_token('ATRIBUICAO', self._conteudo[self.__cab_leitura:self.__cab_leitura + 2])
                 self.__cab_leitura += 2
+            #Verifica se está dentro de uma string
             elif self.__isString and char == '"':
+                #Inicia o estado 4 (processamento de string)
                 self.__estado = 4
                 self.__lexema = char
                 self.__cab_leitura += 1
+                #Adiciona caracteres à string até encontrar a segunda aspa
                 while self.__cab_leitura < len(self._conteudo) and self._conteudo[self.__cab_leitura] != '"':
                     self.__lexema += self._conteudo[self.__cab_leitura]
                     self.__cab_leitura += 1
+                #Verifica se encontrou a segunda aspa
                 if self.__cab_leitura < len(self._conteudo) and self._conteudo[self.__cab_leitura] == '"':
-                    self.__lexema += self._conteudo[self.__cab_leitura]  #adicionando a segunda aspa ao lexema
+                    self.__lexema += self._conteudo[self.__cab_leitura]
                     self.__cab_leitura += 1
+                    #Verifica as aspas e adiciona o token de texto
                     self.verificar_aspas(self.__lexema, self.__linha)
                     self.adicionar_token('TEXT', self.__lexema)
-                    
                 else:
-                    #senão encontrar a segunda aspa, indicar erro
-                    print(f"Erro lexic  o: String '{self.__lexema}' na linha {self.__linha} com aspas faltando")
-                    self.__cab_leitura += 1  #avancando para evitar loop infinito
-                
+                    #Se não encontrar a segunda aspa, indica erro léxico
+                    print(f"Erro léxico: String '{self.__lexema}' na linha {self.__linha} com aspas faltando")
+                    self.__cab_leitura += 1  #Avança para evitar loop infinito
+            #Verifica se é fim de linha
             elif char == self.__fim_linha:
                 self.__linha += 1
                 self.__cab_leitura += 1
+            #Verifica se é um espaço em branco
             elif char.isspace():
                 self.__cab_leitura += 1
+            #Verifica se é um identificador
             elif char.isalpha() or char == '_':
                 self.__estado = 1
                 self.__lexema = char
                 self.__cab_leitura += 1
+                #Adiciona caracteres ao identificador até encontrar um caractere inválido
                 while self.__cab_leitura < len(self._conteudo) and (self._conteudo[self.__cab_leitura].isalnum() or self._conteudo[self.__cab_leitura] == '_'):
                     self.__lexema += self._conteudo[self.__cab_leitura]
                     self.__cab_leitura += 1
+                #Verifica se o identificador é uma palavra reservada
                 if self.__lexema in self.__palavras_reservadas:
                     self.adicionar_token('PALAVRA_RESERVADA', self.__lexema)
                 else:
                     self.adicionar_token('IDENTIFICADOR', self.__lexema)
                     self.erro_lexico_acento(self.__lexema, self.__linha)
+            #Verifica se é um número
             elif char.isdigit():
                 self.__estado = 2
                 self.__lexema = char
                 self.__cab_leitura += 1
+                #Adiciona caracteres ao número até encontrar um caractere inválido
                 while self.__cab_leitura < len(self._conteudo) and (self._conteudo[self.__cab_leitura].isdigit() or self._conteudo[self.__cab_leitura] == '.'):
                     self.__lexema += self._conteudo[self.__cab_leitura]
                     self.__cab_leitura += 1
+                #Verifica se o número é inteiro ou de ponto flutuante
                 if '.' in self.__lexema:
                     self.adicionar_token('NUM_FLU', self.__lexema)
                 else:
                     self.adicionar_token('NUM_INT', self.__lexema)
+            #Caso não se enquadre nos casos anteriores, trata como caractere especial
             else:
                 self.__estado = 3
                 self.__lexema = char
                 self.__cab_leitura += 1
 
+                #Verifica o tipo de caractere especial e adiciona o token correspondente
                 if self.__lexema in self.__tokens_aritmeticos:
                     self.adicionar_token('OP_ARITMETICO', self.__lexema)
-                # elif self.__lexema in self.__tokens_relacionais:
-                #     self.adicionar_token('OP_RELACIONAL', self.__lexema)
+                elif self.__lexema in self.__tokens_relacionais:
+                    self.adicionar_token('OP_RELACIONAL', self.__lexema)
                 elif self.__lexema in self.__tokens_logicos:
                     self.adicionar_token('OP_LOGICO', self.__lexema)
                 elif self.__lexema in self.__caracteres_especiais:
                     self.adicionar_token('SIM_ESPECIAL', self.__lexema)
                 self.__estado = 0
+
+        #Retorna a tabela de símbolos ao final do processamento
         return self.__tabela_simbolos
+
 
     def adicionar_token(self, tipo, lexema):
         token = {'tipo': tipo, 'lexema': lexema, 'linha': self.__linha}
@@ -142,18 +167,6 @@ class AnalisadorLexico:
         if any(char.isalpha() and not char.isascii() for char in lexema):
             print(f"Erro lexico: Identificador '{lexema}' na linha {linha} contem caracteres nao ASCII (acentos)")
 
-    def encontrar_identificadores_duplicados(self):
-        identificadores_vistos = set()
-
-        for token in self.__tabela_simbolos:
-            if token['tipo'] == 'IDENTIFICADOR':
-                lexema = token['lexema']
-                linha = token['linha']
-
-                if lexema in identificadores_vistos:
-                    print(f"Erro lexico: Identificador '{lexema}' duplicado na linha {linha}")
-                else:
-                    identificadores_vistos.add(lexema)
                     
     def verificar_aspas(self, lexema, linha):
         if not (lexema.startswith('"') and lexema.endswith('"')):
@@ -166,6 +179,6 @@ class AnalisadorLexico:
         self.preencher_tokens()
 
 if __name__ == "__main__":
-    # analisador = AnalisadorLexico("erros/erro-lexico-acento.if")
+    #analisador = AnalisadorLexico("erros/erro-lexico-acento.if")
     analisador = AnalisadorLexico("exemplo1.txt")
     analisador.main()
