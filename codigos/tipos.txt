@@ -1,10 +1,10 @@
 main@
-    num_flu preco -> 2.9;
+    num_flu preco -> 2.9; --Float--
 
-    num_int quantidade -> 10;
+    num_int quantidade -> 10; --Int--
 
-    text nomeproduto -> "cafe";
+    text nomeproduto -> "cafe"; --String--
 
-    bool varBool -> ok;
+    bool varBool -> ok; --Bool--
 
 @

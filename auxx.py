@@ -1219,7 +1219,7 @@ class No:
     
     def __repr__(self, profundidade=0): #Este é um método especial que fornece uma representação de string para o objeto No. Ele é chamado quando o objeto No precisa ser convertido em uma string. O parâmetro opcional profundidade é utilizado para controlar a indentação da representação da árvore sintática.
         indentacao = "\t |--" * profundidade
-        representacao = f"{indentacao}{repr(self.tipo)}\n"
+        representacao = f"{indentacao}{repr(self.tipo)}{repr(self.lexema)}\n"
 
         for filho in self.filhos:
             representacao += filho.__repr__(profundidade + 1)
